@@ -1,7 +1,5 @@
 -- Sample data so the site has something to show. Import AFTER schema.sql.
 -- Passwords below are all: Password123
-USE mediquick_db;
-
 INSERT INTO users (role, full_name, email, phone, password_hash, address, city) VALUES
  ('admin', 'Nimal Perera',  'admin@mediquick.lk', '0771234567',
   '$2y$12$FR8I7kyIILjXd9DEexWz.OiuKgLkBYA.fv3hbflAUTjegGtYeLfBi', 'No. 12, Kandy Road', 'Kurunegala'),

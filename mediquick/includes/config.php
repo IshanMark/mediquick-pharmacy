@@ -4,10 +4,10 @@
  */
 
 // --- Database ---
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'mediquick_db');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_HOST', 'sql211.infinityfree.com');
+define('DB_NAME', 'if0_42894052_mediquick');
+define('DB_USER', 'if0_42894052');
+define('DB_PASS', 'Uq47qffnVY4Am');
 
 // --- Business rules ---
 define('DELIVERY_FEE', 350.00);

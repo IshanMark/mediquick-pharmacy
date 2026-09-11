@@ -1,9 +1,6 @@
 -- MediQuick Pharmacy — MySQL schema (XAMPP / MariaDB compatible)
 -- Import in phpMyAdmin: Import > choose this file > Go
 
-CREATE DATABASE IF NOT EXISTS mediquick_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE mediquick_db;
-
 -- One table for all three roles. Roles are fixed, so an ENUM is enough.
 CREATE TABLE users (
   id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
