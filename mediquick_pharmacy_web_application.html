@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediQuick Pharmacy - All-in-One Healthcare Portal</title>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 Pro/Free Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#F0FDF4',
+                            100: '#DCFCE7',
+                            200: '#BBF7D0',
+                            500: '#00B074',
+                            600: '#059669',
+                            700: '#047857',
+                            900: '#064E3B',
+                        },
+                        navy: {
+                            800: '#0A192F',
+                            900: '#0F172A',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFC;
+            color: #1E293B;
+        }
+
+        .view-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.25s ease-in-out;
+        }
+
+        .view-section.active-view {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+
+        .gradient-hero {
+            background: linear-gradient(135deg, #0F172A 0%, #064E3B 100%);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        /* Dropzone Highlight */
+        .dropzone-active {
+            border-color: #00B074 !important;
+            background-color: #F0FDF4 !important;
+        }
+
+        /* Custom Badge Animations */
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(1.02); }
+        }
+        .pulse-badge {
+            animation: pulse-subtle 2s infinite;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen relative">
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-brand-900 text-white text-xs py-2 px-4 flex justify-between items-center z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <span><i class="fa-solid fa-truck-fast text-brand-500 mr-1.5"></i> Express 60-Min Delivery in Kurunegala & Colombo</span>
+                <span class="hidden md:inline text-slate-400">|</span>
+                <span class="hidden md:inline"><i class="fa-solid fa-shield-halved text-brand-500 mr-1.5"></i> 100% Genuine Certified Medicines</span>
+            </div>
+            <div class="flex items-center gap-4 text-xs">
+                <a href="tel:+94372223344" class="hover:text-brand-500 transition"><i class="fa-solid fa-phone mr-1"></i> +94 37 222 3344</a>
+                <span>|</span>
+                <button onclick="switchView('tracking')" class="hover:text-brand-500 transition"><i class="fa-solid fa-location-dot mr-1"></i> Track Order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="javascript:void(0)" onclick="switchView('home')" class="flex items-center gap-2.5 group">
+                <div class="w-10 h-10 rounded-xl bg-brand-500 flex items-center justify-center text-white shadow-md shadow-brand-500/20 group-hover:bg-brand-600 transition">
+                    <i class="fa-solid fa-heart-pulse text-xl"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-extrabold tracking-tight text-navy-900 block leading-tight">MediQuick</span>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-brand-600 block">Pharmacy & Wellness</span>
+                </div>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden lg:flex items-center gap-1 font-medium text-sm text-slate-600">
+                <button onclick="switchView('home')" class="nav-btn px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-brand-600 transition" data-target="home">Home</button>
+                <button onclick="switchView('shop')" class="nav-btn px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-brand-600 transition" data-target="shop">Shop</button>
+                <button onclick="switchView('prescription')" class="nav-btn px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-brand-600 transition flex items-center gap-1.5" data-target="prescription">
+                    <span>Prescription Services</span>
+                    <span class="bg-amber-100 text-amber-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full">Rx</span>
+                </button>
+                <button onclick="switchView('health-hub')" class="nav-btn px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-brand-600 transition" data-target="health-hub">Health Hub</button>
+                <button onclick="switchView('contact')" class="nav-btn px-3 py-2 rounded-lg hover:bg-slate-100 hover:text-brand-600 transition" data-target="contact">Contact</button>
+            </nav>
+
+            <!-- Navigation Quick Actions -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <!-- Search Trigger -->
+                <div class="relative hidden sm:block w-48 lg:w-60">
+                    <input type="text" id="globalNavSearch" placeholder="Search medicines..." onkeyup="handleGlobalSearch(event)" class="w-full bg-slate-100 border border-slate-200 rounded-full py-1.5 pl-9 pr-4 text-xs focus:outline-none focus:border-brand-500 focus:bg-white transition">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+                </div>
+
+                <!-- Account / Auth Button -->
+                <button onclick="handleAccountNav()" class="p-2 text-slate-600 hover:text-brand-600 hover:bg-slate-100 rounded-full transition relative flex items-center gap-1.5" title="User Account">
+                    <i class="fa-regular fa-user text-lg"></i>
+                    <span id="navAuthLabel" class="hidden xl:inline text-xs font-semibold">Sign In</span>
+                </button>
+
+                <!-- Cart Button -->
+                <button onclick="switchView('cart-checkout')" class="p-2 bg-brand-50 hover:bg-brand-100 text-brand-600 rounded-full transition relative flex items-center justify-center" title="Cart & Checkout">
+                    <i class="fa-solid fa-bag-shopping text-lg"></i>
+                    <span id="cartCountBadge" class="absolute -top-1 -right-1 bg-red-500 text-white font-bold text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white shadow">0</span>
+                </button>
+
+                <!-- Mobile Menu Toggle -->
+                <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="lg:hidden p-2 text-slate-700 hover:bg-slate-100 rounded-lg">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Navigation -->
+        <div id="mobileDrawer" class="hidden lg:hidden bg-white border-b border-slate-200 px-4 py-3 space-y-2 text-sm font-medium border-t">
+            <button onclick="switchView('home'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg hover:bg-slate-100">Home</button>
+            <button onclick="switchView('shop'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg hover:bg-slate-100">Shop Catalog</button>
+            <button onclick="switchView('prescription'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg hover:bg-slate-100">Upload Prescription</button>
+            <button onclick="switchView('cart-checkout'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg hover:bg-slate-100">Cart & Checkout</button>
+            <button onclick="switchView('tracking'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg hover:bg-slate-100">Track Order</button>
+            <button onclick="switchView('health-hub'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg hover:bg-slate-100">Health Hub</button>
+            <button onclick="switchView('contact'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg hover:bg-slate-100">Contact Us</button>
+            <button onclick="switchView('login'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg hover:bg-slate-100 text-brand-600 font-bold">Sign In / Register</button>
+            <button onclick="switchView('account'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-lg hover:bg-slate-100">My Account</button>
+        </div>
+    </header>
+
+    <!-- Global Toast Container -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- MAIN VIEWS CONTAINER -->
+    <main class="flex-grow">
+
+        <!-- VIEW 1: HOME PAGE -->
+        <section id="view-home" class="view-section active-view">
+            <!-- Hero Banner -->
+            <div class="gradient-hero text-white py-16 md:py-24 relative overflow-hidden">
+                <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#34d399_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                <div class="container mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
+                    <div class="max-w-2xl space-y-6 text-center md:text-left">
+                        <span class="inline-flex items-center gap-2 bg-emerald-500/20 text-emerald-300 text-xs font-bold px-3 py-1.5 rounded-full border border-emerald-500/30">
+                            <i class="fa-solid fa-award"></i> Registered Sri Lankan Healthcare Partner
+                        </span>
+                        <h1 class="text-3xl sm:text-5xl font-extrabold leading-tight tracking-tight">
+                            Your Health, <span class="text-brand-500">Delivered Fast</span> To Your Doorstep.
+                        </h1>
+                        <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                            Order prescription medicines, health supplements, and daily wellness items with 100% authenticity guaranteed. Fast express delivery across Sri Lanka.
+                        </p>
+                        <div class="flex flex-wrap gap-3 justify-center md:justify-start pt-2">
+                            <button onclick="switchView('shop')" class="bg-brand-500 hover:bg-brand-600 text-white font-bold px-6 py-3 rounded-xl shadow-lg shadow-brand-500/30 transition flex items-center gap-2 text-sm">
+                                Explore Store Catalog <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                            <button onclick="switchView('prescription')" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-semibold px-6 py-3 rounded-xl backdrop-blur transition text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-upload"></i> Upload Prescription
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Prescription Banner Card -->
+                    <div class="w-full md:w-auto min-w-[320px] max-w-md bg-white text-slate-800 rounded-2xl p-6 shadow-2xl border border-slate-100">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-brand-100 text-brand-700 font-bold text-xs px-2.5 py-1 rounded-full">Quick Rx Order</span>
+                            <i class="fa-solid fa-file-prescription text-brand-500 text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-lg mb-1">Upload Doctor's Note</h3>
+                        <p class="text-xs text-slate-500 mb-4">Our licensed pharmacists in Kurunegala will verify and prepare your order within 30 minutes.</p>
+                        
+                        <div onclick="switchView('prescription')" class="border-2 border-dashed border-brand-200 bg-brand-50/50 hover:bg-brand-50 rounded-xl p-6 text-center cursor-pointer transition group">
+                            <i class="fa-solid fa-cloud-arrow-up text-3xl text-brand-500 group-hover:scale-110 transition mb-2"></i>
+                            <div class="text-xs font-bold text-slate-700">Click to upload image or PDF</div>
+                            <div class="text-[10px] text-slate-400 mt-1">Supports JPG, PNG, PDF up to 10MB</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Global Quick Search Box -->
+            <div class="container mx-auto px-4 -mt-8 relative z-20">
+                <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-xl border border-slate-200/80 flex flex-col md:flex-row gap-3 items-center">
+                    <div class="relative flex-grow w-full">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
+                        <input type="text" id="homeSearchInput" placeholder="Search for medicines, vitamins, or generic brand names..." class="w-full pl-11 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-brand-500 bg-slate-50">
+                    </div>
+                    <button onclick="performHomeSearch()" class="w-full md:w-auto bg-brand-500 hover:bg-brand-600 text-white font-bold px-8 py-2.5 rounded-xl text-sm transition shadow-md">
+                        Search Products
+                    </button>
+                </div>
+            </div>
+
+            <!-- Browse Categories Grid -->
+            <div class="container mx-auto px-4 py-16">
+                <div class="flex justify-between items-end mb-8">
+                    <div>
+                        <span class="text-brand-600 font-bold text-xs uppercase tracking-wider">Catalog Overview</span>
+                        <h2 class="text-2xl font-bold text-navy-900">Browse By Health Category</h2>
+                    </div>
+                    <button onclick="switchView('shop')" class="text-brand-600 font-bold text-sm hover:underline flex items-center gap-1">
+                        View All Categories <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+                    <div onclick="filterShopCategory('Medicines')" class="bg-white border border-slate-200/80 hover:border-brand-500 rounded-2xl p-5 text-center cursor-pointer transition shadow-sm hover:shadow-md group">
+                        <div class="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center mx-auto mb-3 text-brand-500 group-hover:bg-brand-500 group-hover:text-white transition">
+                            <i class="fa-solid fa-pills text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-800 text-sm">Prescription Medicines</h3>
+                        <span class="text-xs text-slate-400 mt-1 block">1,200+ Products</span>
+                    </div>
+
+                    <div onclick="filterShopCategory('Vitamins')" class="bg-white border border-slate-200/80 hover:border-brand-500 rounded-2xl p-5 text-center cursor-pointer transition shadow-sm hover:shadow-md group">
+                        <div class="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-3 text-amber-500 group-hover:bg-amber-500 group-hover:text-white transition">
+                            <i class="fa-solid fa-vial-circle-check text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-800 text-sm">Vitamins & Supplements</h3>
+                        <span class="text-xs text-slate-400 mt-1 block">850+ Products</span>
+                    </div>
+
+                    <div onclick="filterShopCategory('Personal Care')" class="bg-white border border-slate-200/80 hover:border-brand-500 rounded-2xl p-5 text-center cursor-pointer transition shadow-sm hover:shadow-md group">
+                        <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-3 text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition">
+                            <i class="fa-solid fa-pump-soap text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-800 text-sm">Personal Skincare</h3>
+                        <span class="text-xs text-slate-400 mt-1 block">450+ Products</span>
+                    </div>
+
+                    <div onclick="filterShopCategory('Baby Care')" class="bg-white border border-slate-200/80 hover:border-brand-500 rounded-2xl p-5 text-center cursor-pointer transition shadow-sm hover:shadow-md group">
+                        <div class="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center mx-auto mb-3 text-purple-500 group-hover:bg-purple-500 group-hover:text-white transition">
+                            <i class="fa-solid fa-baby text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-800 text-sm">Mother & Baby Care</h3>
+                        <span class="text-xs text-slate-400 mt-1 block">320+ Products</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Essentials Showcase -->
+            <div class="bg-slate-100 py-16">
+                <div class="container mx-auto px-4">
+                    <div class="flex justify-between items-end mb-8">
+                        <div>
+                            <span class="text-brand-600 font-bold text-xs uppercase tracking-wider">Top Healthcare Essentials</span>
+                            <h2 class="text-2xl font-bold text-navy-900">Recommended For You</h2>
+                        </div>
+                        <button onclick="switchView('shop')" class="text-brand-600 font-bold text-sm hover:underline">
+                            Explore Shop <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+
+                    <!-- Products Grid Dynamic Container -->
+                    <div id="homeFeaturedGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trust Features Section -->
+            <div class="container mx-auto px-4 py-16">
+                <div class="text-center max-w-xl mx-auto mb-12">
+                    <h2 class="text-2xl font-bold text-navy-900">Why Trust MediQuick Pharmacy?</h2>
+                    <p class="text-slate-500 text-sm mt-2">Licensed pharmacists, direct authentic sourcing, and priority express dispatch.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 text-center shadow-sm">
+                        <div class="w-12 h-12 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center mx-auto mb-4 text-xl">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-base mb-1">100% Genuine</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">Directly sourced from certified pharmaceutical labs & NMRA approved distributors.</p>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 text-center shadow-sm">
+                        <div class="w-12 h-12 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center mx-auto mb-4 text-xl">
+                            <i class="fa-solid fa-user-doctor"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-base mb-1">Licensed Pharmacists</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">Expert review on every prescription uploaded with complete confidentiality.</p>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 text-center shadow-sm">
+                        <div class="w-12 h-12 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center mx-auto mb-4 text-xl">
+                            <i class="fa-solid fa-truck-fast"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-base mb-1">Express Delivery</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">Fast local door-step delivery in Kurunegala & island-wide courier coverage.</p>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 text-center shadow-sm">
+                        <div class="w-12 h-12 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center mx-auto mb-4 text-xl">
+                            <i class="fa-solid fa-lock"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-base mb-1">Secure & Private</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">Encrypted health data storage adhering strictly to patient privacy standards.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 2: SHOP CATALOG -->
+        <section id="view-shop" class="view-section">
+            <div class="bg-slate-900 text-white py-8">
+                <div class="container mx-auto px-4">
+                    <span class="text-brand-500 font-bold text-xs uppercase tracking-wider">Product Catalog</span>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold mt-1">Shop Healthcare Products</h1>
+                    <p class="text-slate-400 text-xs sm:text-sm mt-1 max-w-xl">Browse certified prescription medicines, OTC drugs, first aid items, and wellness supplements.</p>
+                </div>
+            </div>
+
+            <div class="container mx-auto px-4 py-8">
+                <!-- Shop Controls Bar -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200 mb-6 flex flex-col md:flex-row gap-4 items-center justify-between">
+                    <div class="relative w-full md:w-80">
+                        <input type="text" id="shopSearchInput" placeholder="Filter shop catalog..." onkeyup="filterProducts()" class="w-full bg-slate-50 border border-slate-200 rounded-lg py-2 pl-9 pr-3 text-xs focus:outline-none focus:border-brand-500">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
+                    </div>
+
+                    <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+                        <div class="text-xs text-slate-500 font-medium">
+                            Showing <span id="shopCountSpan" class="font-bold text-slate-900">8</span> Items
+                        </div>
+                        <select id="shopSortSelect" onchange="filterProducts()" class="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium focus:outline-none focus:border-brand-500">
+                            <option value="relevance">Sort: Relevance</option>
+                            <option value="low-high">Price: Low to High</option>
+                            <option value="high-low">Price: High to Low</option>
+                            <option value="rating">Top Rated</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Main Layout: Sidebar Filters + Catalog Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                    <!-- Filters Sidebar -->
+                    <aside class="space-y-6">
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200">
+                            <div class="flex justify-between items-center mb-4 pb-2 border-b">
+                                <h3 class="font-bold text-slate-900 text-sm">Category Filters</h3>
+                                <button onclick="resetShopFilters()" class="text-xs text-brand-600 hover:underline font-semibold">Reset</button>
+                            </div>
+
+                            <div class="space-y-2 text-xs text-slate-600">
+                                <label class="flex items-center gap-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
+                                    <input type="radio" name="catFilter" value="All" checked onchange="filterProducts()" class="accent-brand-500">
+                                    <span>All Categories</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
+                                    <input type="radio" name="catFilter" value="Medicines" onchange="filterProducts()" class="accent-brand-500">
+                                    <span>Prescription Medicines</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
+                                    <input type="radio" name="catFilter" value="Pain Relief" onchange="filterProducts()" class="accent-brand-500">
+                                    <span>Pain Relief</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
+                                    <input type="radio" name="catFilter" value="Vitamins" onchange="filterProducts()" class="accent-brand-500">
+                                    <span>Vitamins & Wellness</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
+                                    <input type="radio" name="catFilter" value="First Aid" onchange="filterProducts()" class="accent-brand-500">
+                                    <span>First Aid & Medical</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer p-1 hover:bg-slate-50 rounded">
+                                    <input type="radio" name="catFilter" value="Personal Care" onchange="filterProducts()" class="accent-brand-500">
+                                    <span>Skincare & Personal</span>
+                                </label>
+                            </div>
+
+                            <div class="mt-6 pt-4 border-t">
+                                <h4 class="font-bold text-slate-900 text-xs mb-2">Prescription Type</h4>
+                                <label class="flex items-center gap-2 text-xs text-slate-600 cursor-pointer">
+                                    <input type="checkbox" id="rxOnlyCheckbox" onchange="filterProducts()" class="accent-brand-500 rounded">
+                                    <span>Show Rx Required Only</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar Promotion Banner -->
+                        <div class="bg-brand-900 text-white p-5 rounded-2xl shadow-md">
+                            <i class="fa-solid fa-headset text-2xl text-brand-500 mb-2"></i>
+                            <h4 class="font-bold text-sm">Need Help Finding Medicine?</h4>
+                            <p class="text-xs text-slate-300 mt-1 mb-3">Speak directly with our duty pharmacist in Kurunegala.</p>
+                            <button onclick="openPharmacistModal()" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs py-2 rounded-lg transition">
+                                Chat With Pharmacist
+                            </button>
+                        </div>
+                    </aside>
+
+                    <!-- Catalog Grid Column -->
+                    <div class="lg:col-span-3">
+                        <div id="shopProductsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Dynamically loaded products -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 3: PRODUCT DETAIL PAGE -->
+        <section id="view-product-detail" class="view-section">
+            <div class="container mx-auto px-4 py-8">
+                <!-- Breadcrumbs -->
+                <nav class="flex items-center gap-2 text-xs text-slate-400 mb-6">
+                    <button onclick="switchView('home')" class="hover:underline">Home</button>
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    <button onclick="switchView('shop')" class="hover:underline">Shop</button>
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    <span id="detailBreadcrumbName" class="text-slate-800 font-semibold">Product Detail</span>
+                </nav>
+
+                <!-- Product Content Card -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 md:p-8 shadow-sm">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+                        <!-- Product Gallery -->
+                        <div class="space-y-4">
+                            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-8 flex items-center justify-center h-80 relative">
+                                <span id="detailBadge" class="absolute top-4 left-4 bg-brand-100 text-brand-700 text-xs font-bold px-2.5 py-1 rounded-full">In Stock</span>
+                                <i id="detailIcon" class="fa-solid fa-pills text-8xl text-brand-500/40"></i>
+                            </div>
+                            <div class="grid grid-cols-4 gap-3">
+                                <div class="border-2 border-brand-500 rounded-xl p-2 bg-slate-50 text-center cursor-pointer">
+                                    <i class="fa-solid fa-pills text-brand-500 text-2xl"></i>
+                                </div>
+                                <div class="border border-slate-200 rounded-xl p-2 bg-slate-50 text-center cursor-pointer hover:border-slate-400">
+                                    <i class="fa-solid fa-box text-slate-400 text-2xl"></i>
+                                </div>
+                                <div class="border border-slate-200 rounded-xl p-2 bg-slate-50 text-center cursor-pointer hover:border-slate-400">
+                                    <i class="fa-solid fa-prescription-bottle-medical text-slate-400 text-2xl"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Product Overview & Actions -->
+                        <div class="space-y-5">
+                            <div>
+                                <span id="detailCategory" class="text-xs font-bold uppercase tracking-wider text-brand-600">ANTIBIOTICS</span>
+                                <h1 id="detailTitle" class="text-2xl sm:text-3xl font-extrabold text-navy-900 mt-1">Amoxicillin 500mg Broad-Spectrum Antibiotic</h1>
+                                <div class="flex items-center gap-2 mt-2 text-xs">
+                                    <div class="text-amber-400 flex gap-0.5">
+                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+                                    </div>
+                                    <span class="text-slate-500 font-medium">(4.8 / 5.0 Rating from 42 Patients)</span>
+                                </div>
+                            </div>
+
+                            <div class="text-2xl font-extrabold text-navy-900 flex items-baseline gap-2">
+                                <span id="detailPrice">LKR 950.00</span>
+                                <span class="text-xs font-medium text-slate-400">Taxes Included</span>
+                            </div>
+
+                            <p id="detailDesc" class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                                Amoxicillin is a penicillin antibiotic that fights bacterial infections across various organs including chest, ear, sinus, and throat infections.
+                            </p>
+
+                            <!-- Prescription Warning / Upload Box -->
+                            <div id="detailRxBox" class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs space-y-2">
+                                <div class="flex items-center gap-2 font-bold text-amber-800">
+                                    <i class="fa-solid fa-triangle-exclamation text-amber-600 text-base"></i>
+                                    <span>Prescription Required (Rx)</span>
+                                </div>
+                                <p class="text-amber-700">This medication requires a valid doctor's prescription. You will be prompted to attach your prescription during checkout.</p>
+                            </div>
+
+                            <!-- Quantity & Add to Cart -->
+                            <div class="flex items-center gap-4 pt-2">
+                                <div class="flex items-center border border-slate-300 rounded-xl bg-slate-50 p-1">
+                                    <button onclick="adjustDetailQty(-1)" class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-slate-600 hover:bg-white">-</button>
+                                    <span id="detailQty" class="w-10 text-center font-bold text-sm">1</span>
+                                    <button onclick="adjustDetailQty(1)" class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-slate-600 hover:bg-white">+</button>
+                                </div>
+                                <button onclick="addSelectedToCart()" class="flex-grow bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-brand-500/20 transition flex items-center justify-center gap-2 text-sm">
+                                    <i class="fa-solid fa-cart-shopping"></i> Add To Cart
+                                </button>
+                            </div>
+
+                            <!-- Guaranteed Badges -->
+                            <div class="grid grid-cols-2 gap-3 pt-4 border-t border-slate-100 text-xs">
+                                <div class="flex items-center gap-2 text-slate-600">
+                                    <i class="fa-solid fa-truck-fast text-brand-500 text-base"></i>
+                                    <span>Fast Courier Delivery</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-slate-600">
+                                    <i class="fa-solid fa-shield-halved text-brand-500 text-base"></i>
+                                    <span>100% Genuine Medicine</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 4: PRESCRIPTION SERVICE -->
+        <section id="view-prescription" class="view-section">
+            <div class="gradient-hero text-white py-12">
+                <div class="container mx-auto px-4 text-center max-w-2xl">
+                    <span class="bg-brand-500/20 text-brand-300 text-xs font-bold px-3 py-1 rounded-full border border-brand-500/30">Official Pharmacy Upload</span>
+                    <h1 class="text-3xl font-extrabold mt-3">Upload Doctor's Prescription</h1>
+                    <p class="text-slate-300 text-xs sm:text-sm mt-2">Submit your prescription online. Our registered pharmacists will inspect, quote, and fulfill your medication seamlessly.</p>
+                </div>
+            </div>
+
+            <div class="container mx-auto px-4 py-12">
+                <!-- Multi-Step Progress Tracker -->
+                <div class="max-w-3xl mx-auto mb-10">
+                    <div class="grid grid-cols-4 text-center text-xs font-bold">
+                        <div class="space-y-1 text-brand-600">
+                            <div class="w-8 h-8 rounded-full bg-brand-500 text-white flex items-center justify-center mx-auto shadow">1</div>
+                            <span>Upload</span>
+                        </div>
+                        <div class="space-y-1 text-slate-400">
+                            <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center mx-auto">2</div>
+                            <span>Review</span>
+                        </div>
+                        <div class="space-y-1 text-slate-400">
+                            <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center mx-auto">3</div>
+                            <span>Confirmation</span>
+                        </div>
+                        <div class="space-y-1 text-slate-400">
+                            <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center mx-auto">4</div>
+                            <span>Dispatch</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                    <!-- Form Column -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- Dropzone Card -->
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                            <h3 class="font-bold text-slate-900 text-base mb-1">Upload Prescription Document</h3>
+                            <p class="text-xs text-slate-500 mb-4">Take a clear photo of your written prescription or attach a PDF file.</p>
+
+                            <div id="rxDropzone" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleFileDrop(event)" onclick="triggerRxInput()" class="border-2 border-dashed border-slate-300 hover:border-brand-500 bg-slate-50 rounded-2xl p-8 text-center cursor-pointer transition">
+                                <i class="fa-solid fa-cloud-arrow-up text-4xl text-slate-400 mb-2"></i>
+                                <div class="text-sm font-bold text-slate-700">Drag & Drop file here or Click to Browse</div>
+                                <div id="rxFileName" class="text-xs text-brand-600 font-bold mt-2"></div>
+                                <input type="file" id="rxFileInput" accept="image/*,.pdf" class="hidden" onchange="handleRxFileSelect(event)">
+                            </div>
+                        </div>
+
+                        <!-- Patient Form Card -->
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                            <h3 class="font-bold text-slate-900 text-base mb-4">Patient Information</h3>
+                            <form onsubmit="submitPrescription(event)" class="space-y-4">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Patient Full Name</label>
+                                        <input type="text" id="rxPatientName" placeholder="John Doe" required class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:outline-none focus:border-brand-500 bg-slate-50">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Contact Phone</label>
+                                        <input type="tel" id="rxPatientPhone" placeholder="+94 77 123 4567" required class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:outline-none focus:border-brand-500 bg-slate-50">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Notes / Special Instructions</label>
+                                    <textarea id="rxPatientNotes" rows="3" placeholder="Specify brand preferences, dosage queries, or delivery requests..." class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:outline-none focus:border-brand-500 bg-slate-50"></textarea>
+                                </div>
+
+                                <div class="flex items-start gap-2 pt-1">
+                                    <input type="checkbox" id="rxConsent" required class="mt-0.5 accent-brand-500">
+                                    <label for="rxConsent" class="text-xs text-slate-500">I certify that the uploaded image represents a genuine doctor's prescription issued by a qualified medical practitioner.</label>
+                                </div>
+
+                                <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 rounded-xl shadow-md transition text-sm">
+                                    Submit Prescription For Verification
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar Guidelines -->
+                    <aside class="space-y-6">
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200">
+                            <h4 class="font-bold text-slate-900 text-sm mb-3">Prescription Checklist</h4>
+                            <ul class="space-y-2.5 text-xs text-slate-600">
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-circle-check text-brand-500 mt-0.5"></i>
+                                    <span>Doctor's signature & seal visible</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-circle-check text-brand-500 mt-0.5"></i>
+                                    <span>Patient name and date clearly readable</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-circle-check text-brand-500 mt-0.5"></i>
+                                    <span>Medicine name, strength, and dosage instructions</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-emerald-50 border border-emerald-200 p-5 rounded-2xl text-xs text-emerald-900 space-y-2">
+                            <div class="font-bold flex items-center gap-2">
+                                <i class="fa-solid fa-shield-heart text-emerald-600 text-base"></i>
+                                <span>100% Confidential</span>
+                            </div>
+                            <p>Your uploaded health records are handled securely according to strict pharmaceutical privacy protocols.</p>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 5: CART & CHECKOUT PAGE -->
+        <section id="view-cart-checkout" class="view-section">
+            <div class="bg-slate-900 text-white py-8">
+                <div class="container mx-auto px-4">
+                    <span class="text-brand-500 font-bold text-xs uppercase tracking-wider">Checkout Workflow</span>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold mt-1">Review Cart & Deliver Details</h1>
+                </div>
+            </div>
+
+            <div class="container mx-auto px-4 py-8">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Cart Items & Delivery Form -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- Items Table/Card -->
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                            <div class="flex justify-between items-center mb-4 pb-2 border-b">
+                                <h3 class="font-bold text-slate-900 text-base">Order Items</h3>
+                                <span id="cartHeaderQty" class="text-xs bg-brand-100 text-brand-700 font-bold px-2.5 py-1 rounded-full">0 Items</span>
+                            </div>
+
+                            <div id="cartItemsContainer" class="space-y-4">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Delivery Address Form -->
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                            <h3 class="font-bold text-slate-900 text-base">Delivery Address</h3>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Recipient Name</label>
+                                    <input type="text" id="chkName" placeholder="Full Name" value="Kamal Perera" class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:outline-none focus:border-brand-500 bg-slate-50">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Phone Number</label>
+                                    <input type="tel" id="chkPhone" placeholder="+94 7X XXX XXXX" value="+94 77 987 6543" class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:outline-none focus:border-brand-500 bg-slate-50">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Street Address</label>
+                                <input type="text" id="chkAddress" placeholder="No. 123, Colombo Road" value="No. 45, Kandy Road, Kurunegala" class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:outline-none focus:border-brand-500 bg-slate-50">
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">City</label>
+                                    <input type="text" id="chkCity" value="Kurunegala" class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:outline-none focus:border-brand-500 bg-slate-50">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Delivery Notes</label>
+                                    <input type="text" id="chkNotes" placeholder="Leave at main gate..." class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:outline-none focus:border-brand-500 bg-slate-50">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Option -->
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                            <h3 class="font-bold text-slate-900 text-base">Payment Method</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <label class="flex items-center gap-3 border-2 border-brand-500 bg-brand-50/50 p-3 rounded-xl cursor-pointer">
+                                    <input type="radio" name="payMethod" value="cod" checked class="accent-brand-500">
+                                    <div>
+                                        <div class="font-bold text-xs text-slate-900">Cash on Delivery (COD)</div>
+                                        <div class="text-[10px] text-slate-500">Pay cash upon order doorstep delivery</div>
+                                    </div>
+                                </label>
+                                <label class="flex items-center gap-3 border border-slate-200 p-3 rounded-xl cursor-pointer hover:border-slate-300">
+                                    <input type="radio" name="payMethod" value="card" class="accent-brand-500">
+                                    <div>
+                                        <div class="font-bold text-xs text-slate-900">Online Card Payment</div>
+                                        <div class="text-[10px] text-slate-500">Visa, Mastercard, or Koko Installments</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary Column -->
+                    <aside class="space-y-6">
+                        <div class="bg-navy-900 text-white p-6 rounded-2xl shadow-xl">
+                            <h3 class="font-bold text-lg mb-4">Order Summary</h3>
+
+                            <div class="space-y-3 text-xs text-slate-300 pb-4 border-b border-slate-800">
+                                <div class="flex justify-between">
+                                    <span>Subtotal</span>
+                                    <span id="summarySubtotal" class="font-semibold text-white">LKR 0.00</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Delivery Fee</span>
+                                    <span id="summaryDelivery" class="font-semibold text-white">LKR 250.00</span>
+                                </div>
+                                <div class="flex justify-between text-brand-400">
+                                    <span>Discount (PROMO)</span>
+                                    <span id="summaryDiscount">- LKR 0.00</span>
+                                </div>
+                            </div>
+
+                            <!-- Promo Code Input -->
+                            <div class="my-4 flex gap-2">
+                                <input type="text" id="promoInput" placeholder="Promo Code (e.g. MEDI10)" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs uppercase text-white focus:outline-none focus:border-brand-500">
+                                <button onclick="applyPromoCode()" class="bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs px-3 py-2 rounded-lg transition">Apply</button>
+                            </div>
+
+                            <div class="flex justify-between items-center text-base font-extrabold pt-2 pb-6">
+                                <span>Grand Total</span>
+                                <span id="summaryTotal" class="text-brand-500 text-xl">LKR 250.00</span>
+                            </div>
+
+                            <button onclick="processFinalCheckout()" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-brand-500/30 text-sm flex items-center justify-center gap-2">
+                                Confirm & Place Order <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 6: PAYMENT & CONFIRMATION PAGE -->
+        <section id="view-confirmation" class="view-section">
+            <div class="container mx-auto px-4 py-16 text-center max-w-2xl">
+                <div class="w-20 h-20 bg-brand-100 text-brand-600 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl shadow-lg shadow-brand-500/20 pulse-badge">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+
+                <span class="bg-brand-100 text-brand-700 font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider">Order Confirmed</span>
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-navy-900 mt-2 mb-3">Thank You For Your Order!</h1>
+                <p class="text-slate-600 text-sm mb-6">Your order has been received and is being processed by our pharmacist team.</p>
+
+                <div class="bg-white border border-slate-200 rounded-2xl p-6 text-left shadow-sm mb-6 space-y-4">
+                    <div class="flex justify-between border-b pb-3">
+                        <span class="text-xs text-slate-500">Order Reference #:</span>
+                        <span id="confirmRef" class="text-xs font-bold text-navy-900">MQ-84920</span>
+                    </div>
+                    <div class="flex justify-between border-b pb-3">
+                        <span class="text-xs text-slate-500">Estimated Delivery:</span>
+                        <span class="text-xs font-bold text-brand-600">30 - 60 Minutes (Kurunegala Express)</span>
+                    </div>
+                    <div class="flex justify-between border-b pb-3">
+                        <span class="text-xs text-slate-500">Payment Status:</span>
+                        <span class="text-xs font-bold text-slate-800">Cash on Delivery</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-xs text-slate-500">Total Paid:</span>
+                        <span id="confirmTotal" class="text-sm font-extrabold text-brand-600">LKR 0.00</span>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button onclick="switchView('tracking')" class="bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-6 rounded-xl transition text-sm">
+                        <i class="fa-solid fa-location-dot mr-1"></i> Track Order Realtime
+                    </button>
+                    <button onclick="switchView('shop')" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold py-3 px-6 rounded-xl transition text-sm">
+                        Continue Shopping
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 7: HEALTH HUB PAGE -->
+        <section id="view-health-hub" class="view-section">
+            <div class="gradient-hero text-white py-12">
+                <div class="container mx-auto px-4 text-center max-w-2xl">
+                    <span class="bg-brand-500/20 text-brand-300 text-xs font-bold px-3 py-1 rounded-full border border-brand-500/30">Pharmacist Guidance</span>
+                    <h1 class="text-3xl font-extrabold mt-3">Health Hub & Knowledge Center</h1>
+                    <p class="text-slate-300 text-xs sm:text-sm mt-2">Verified medical articles, preventive health care guides, and drug safety guidelines.</p>
+                </div>
+            </div>
+
+            <div class="container mx-auto px-4 py-12">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Article 1 -->
+                    <article class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition">
+                        <div class="bg-emerald-50 h-44 flex items-center justify-center text-brand-500">
+                            <i class="fa-solid fa-notes-medical text-5xl"></i>
+                        </div>
+                        <div class="p-6 space-y-2">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-brand-600 bg-brand-50 px-2 py-0.5 rounded">PREVENTION</span>
+                            <h3 class="font-bold text-navy-900 text-base">Managing Seasonal Allergies</h3>
+                            <p class="text-xs text-slate-500 leading-relaxed">Learn how weather changes trigger allergic reactions and best over-the-counter remedies.</p>
+                            <div class="pt-2 text-xs text-slate-400 flex justify-between items-center">
+                                <span>Oct 24, 2026</span>
+                                <span class="text-brand-600 font-bold hover:underline cursor-pointer">Read Guide &rarr;</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Article 2 -->
+                    <article class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition">
+                        <div class="bg-blue-50 h-44 flex items-center justify-center text-blue-500">
+                            <i class="fa-solid fa-heart-pulse text-5xl"></i>
+                        </div>
+                        <div class="p-6 space-y-2">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-0.5 rounded">WELLNESS</span>
+                            <h3 class="font-bold text-navy-900 text-base">Understanding Blood Pressure</h3>
+                            <p class="text-xs text-slate-500 leading-relaxed">Key risk factors, effective dietary control, and maintaining cardiovascular health.</p>
+                            <div class="pt-2 text-xs text-slate-400 flex justify-between items-center">
+                                <span>Oct 20, 2026</span>
+                                <span class="text-brand-600 font-bold hover:underline cursor-pointer">Read Guide &rarr;</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Article 3 -->
+                    <article class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition">
+                        <div class="bg-amber-50 h-44 flex items-center justify-center text-amber-500">
+                            <i class="fa-solid fa-pills text-5xl"></i>
+                        </div>
+                        <div class="p-6 space-y-2">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-amber-600 bg-amber-50 px-2 py-0.5 rounded">SAFETY</span>
+                            <h3 class="font-bold text-navy-900 text-base">Antibiotics Guidelines</h3>
+                            <p class="text-xs text-slate-500 leading-relaxed">Why completing full antibiotic courses is crucial to avoid microbial resistance.</p>
+                            <div class="pt-2 text-xs text-slate-400 flex justify-between items-center">
+                                <span>Oct 15, 2026</span>
+                                <span class="text-brand-600 font-bold hover:underline cursor-pointer">Read Guide &rarr;</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 8: CONTACT & BRANCHES PAGE -->
+        <section id="view-contact" class="view-section">
+            <div class="bg-slate-900 text-white py-8">
+                <div class="container mx-auto px-4">
+                    <span class="text-brand-500 font-bold text-xs uppercase tracking-wider">Pharmacy Outlets</span>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold mt-1">Contact Us & Branch Locations</h1>
+                </div>
+            </div>
+
+            <div class="container mx-auto px-4 py-12">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <!-- Contact Form -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                        <h3 class="font-bold text-navy-900 text-lg">Send Us A Message</h3>
+                        <form onsubmit="handleContactSubmit(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Your Name</label>
+                                <input type="text" required placeholder="Name" class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:outline-none focus:border-brand-500 bg-slate-50">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Email Address</label>
+                                <input type="email" required placeholder="email@example.com" class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:outline-none focus:border-brand-500 bg-slate-50">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Message</label>
+                                <textarea rows="4" required placeholder="How can our pharmacists assist you?" class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:outline-none focus:border-brand-500 bg-slate-50"></textarea>
+                            </div>
+                            <button type="submit" class="bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-6 rounded-xl transition text-sm">
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Branch Information -->
+                    <div class="space-y-6">
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                            <h4 class="font-bold text-navy-900 text-base mb-3"><i class="fa-solid fa-store text-brand-500 mr-2"></i> Kurunegala Main Branch</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed mb-2"><i class="fa-solid fa-location-dot text-slate-400 mr-2"></i> No. 123, Colombo Road, Kurunegala, Sri Lanka</p>
+                            <p class="text-xs text-slate-600 leading-relaxed mb-2"><i class="fa-solid fa-phone text-slate-400 mr-2"></i> +94 37 222 3344</p>
+                            <p class="text-xs text-slate-600 leading-relaxed"><i class="fa-solid fa-clock text-slate-400 mr-2"></i> Open 7 Days: 8:00 AM - 10:00 PM</p>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                            <h4 class="font-bold text-navy-900 text-base mb-3"><i class="fa-solid fa-store text-brand-500 mr-2"></i> Colombo Express Branch</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed mb-2"><i class="fa-solid fa-location-dot text-slate-400 mr-2"></i> No. 45, Galle Road, Colombo 03, Sri Lanka</p>
+                            <p class="text-xs text-slate-600 leading-relaxed mb-2"><i class="fa-solid fa-phone text-slate-400 mr-2"></i> +94 11 234 5678</p>
+                            <p class="text-xs text-slate-600 leading-relaxed"><i class="fa-solid fa-clock text-slate-400 mr-2"></i> 24/7 Emergency Pharmacy Service</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 9: USER ACCOUNT DASHBOARD -->
+        <section id="view-account" class="view-section">
+            <div class="container mx-auto px-4 py-12">
+                <div class="max-w-4xl mx-auto bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm">
+                    <div class="flex items-center gap-4 pb-6 border-b">
+                        <div class="w-16 h-16 rounded-full bg-brand-100 text-brand-700 font-extrabold text-xl flex items-center justify-center">
+                            KP
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-navy-900">Kamal Perera</h2>
+                            <p class="text-xs text-slate-500">Registered Patient ID: #MQ-9021</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+                            <i class="fa-solid fa-box text-2xl text-brand-500 mb-2"></i>
+                            <div class="text-lg font-bold text-slate-900">3</div>
+                            <div class="text-xs text-slate-500">Active Orders</div>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+                            <i class="fa-solid fa-file-prescription text-2xl text-amber-500 mb-2"></i>
+                            <div class="text-lg font-bold text-slate-900">2</div>
+                            <div class="text-xs text-slate-500">Saved Prescriptions</div>
+                        </div>
+
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+                            <i class="fa-solid fa-clock-rotate-left text-2xl text-blue-500 mb-2"></i>
+                            <div class="text-lg font-bold text-slate-900">12</div>
+                            <div class="text-xs text-slate-500">Past Refills</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 10: ORDER TRACKER PORTAL -->
+        <section id="view-tracking" class="view-section">
+            <div class="bg-slate-900 text-white py-8">
+                <div class="container mx-auto px-4">
+                    <span class="text-brand-500 font-bold text-xs uppercase tracking-wider">Live Status</span>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold mt-1">Order Tracking Portal</h1>
+                </div>
+            </div>
+
+            <div class="container mx-auto px-4 py-12">
+                <div class="max-w-2xl mx-auto bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm">
+                    <div class="flex gap-2 mb-8">
+                        <input type="text" id="trackInput" placeholder="Enter Reference ID (e.g. MQ-84920)" value="MQ-84920" class="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-brand-500 bg-slate-50">
+                        <button onclick="trackOrderSim()" class="bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs px-6 py-2.5 rounded-xl transition">Track</button>
+                    </div>
+
+                    <div id="trackingStatusBox" class="space-y-6">
+                        <div class="flex justify-between items-center bg-brand-50 border border-brand-200 p-4 rounded-xl">
+                            <div>
+                                <div class="text-xs text-brand-700 font-bold">STATUS: IN TRANSIT</div>
+                                <div class="text-xs text-slate-600">Expected Delivery in 25 Minutes</div>
+                            </div>
+                            <span class="bg-brand-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full">Out For Delivery</span>
+                        </div>
+
+                        <!-- Progress Steps Timeline -->
+                        <div class="space-y-4 text-xs">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-circle-check text-brand-500 text-base"></i>
+                                <div>
+                                    <div class="font-bold text-slate-900">Order Received & Payment Verified</div>
+                                    <div class="text-slate-400 text-[10px]">10:15 AM</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-circle-check text-brand-500 text-base"></i>
+                                <div>
+                                    <div class="font-bold text-slate-900">Pharmacist Inspection & Packaging Completed</div>
+                                    <div class="text-slate-400 text-[10px]">10:25 AM</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-truck-fast text-brand-500 text-base"></i>
+                                <div>
+                                    <div class="font-bold text-slate-900">Dispatched via Kurunegala Express Driver</div>
+                                    <div class="text-slate-400 text-[10px]">10:35 AM</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 11: USER LOGIN & REGISTER PAGE -->
+        <section id="view-login" class="view-section">
+            <div class="gradient-hero text-white py-12">
+                <div class="container mx-auto px-4 text-center max-w-xl">
+                    <span class="bg-brand-500/20 text-brand-300 text-xs font-bold px-3 py-1 rounded-full border border-brand-500/30">Patient Portal</span>
+                    <h1 class="text-3xl font-extrabold mt-3">Welcome to MediQuick</h1>
+                    <p class="text-slate-300 text-xs sm:text-sm mt-2">Sign in to manage your prescription orders, delivery addresses, and medical refill schedules.</p>
+                </div>
+            </div>
+
+            <div class="container mx-auto px-4 py-12">
+                <div class="max-w-md mx-auto bg-white rounded-2xl border border-slate-200/90 shadow-xl overflow-hidden">
+                    <!-- Auth Switcher Header -->
+                    <div class="grid grid-cols-2 bg-slate-100 p-1.5 border-b border-slate-200 font-bold text-xs text-slate-600">
+                        <button id="tabBtnLogin" onclick="switchAuthTab('login')" class="py-2.5 rounded-xl bg-white text-navy-900 shadow-sm transition">Sign In</button>
+                        <button id="tabBtnRegister" onclick="switchAuthTab('register')" class="py-2.5 rounded-xl hover:text-navy-900 transition">Create Account</button>
+                    </div>
+
+                    <div class="p-6 sm:p-8">
+                        <!-- Sign In Form Box -->
+                        <form id="authLoginForm" onsubmit="handleLogin(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Email Address or Mobile</label>
+                                <div class="relative">
+                                    <input type="text" id="loginEmail" required placeholder="patient@example.com or +94 77..." class="w-full border border-slate-200 rounded-xl py-2.5 pl-9 pr-3 text-xs focus:outline-none focus:border-brand-500 bg-slate-50">
+                                    <i class="fa-regular fa-envelope absolute left-3 top-3 text-slate-400 text-xs"></i>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between items-center mb-1">
+                                    <label class="block text-xs font-bold uppercase text-slate-600">Password</label>
+                                    <a href="javascript:void(0)" onclick="showToast('Password reset link sent to your registered email!')" class="text-[11px] font-semibold text-brand-600 hover:underline">Forgot?</a>
+                                </div>
+                                <div class="relative">
+                                    <input type="password" id="loginPass" required placeholder="••••••••" class="w-full border border-slate-200 rounded-xl py-2.5 pl-9 pr-3 text-xs focus:outline-none focus:border-brand-500 bg-slate-50">
+                                    <i class="fa-solid fa-lock absolute left-3 top-3 text-slate-400 text-xs"></i>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-2 pt-1">
+                                <input type="checkbox" id="rememberMe" checked class="accent-brand-500 rounded">
+                                <label for="rememberMe" class="text-xs text-slate-600">Keep me logged in on this browser</label>
+                            </div>
+
+                            <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-brand-500/20 transition text-sm flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-right-to-bracket"></i> Sign In to Account
+                            </button>
+                        </form>
+
+                        <!-- Registration Form Box -->
+                        <form id="authRegisterForm" onsubmit="handleRegister(event)" class="space-y-4 hidden">
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Full Name</label>
+                                <input type="text" id="regName" required placeholder="Kamal Perera" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs focus:outline-none focus:border-brand-500 bg-slate-50">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Mobile Phone</label>
+                                <input type="tel" id="regPhone" required placeholder="+94 77 123 4567" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs focus:outline-none focus:border-brand-500 bg-slate-50">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Email Address</label>
+                                <input type="email" id="regEmail" required placeholder="kamal@example.com" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs focus:outline-none focus:border-brand-500 bg-slate-50">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Create Password</label>
+                                <input type="password" id="regPass" required placeholder="At least 6 characters" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs focus:outline-none focus:border-brand-500 bg-slate-50">
+                            </div>
+
+                            <div class="flex items-start gap-2 pt-1">
+                                <input type="checkbox" id="regTerms" required class="mt-0.5 accent-brand-500">
+                                <label for="regTerms" class="text-xs text-slate-500">I agree to the <a href="javascript:void(0)" class="text-brand-600 underline">Terms of Service</a> & <a href="javascript:void(0)" class="text-brand-600 underline">Privacy Policy</a></label>
+                            </div>
+
+                            <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-brand-500/20 transition text-sm">
+                                Create Patient Account
+                            </button>
+                        </form>
+
+                        <!-- Quick Social Login Divider -->
+                        <div class="mt-6 pt-6 border-t border-slate-100 text-center space-y-3">
+                            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Or Continue With</span>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button onclick="simulateSocialAuth('Google')" class="border border-slate-200 hover:bg-slate-50 rounded-xl py-2 px-3 text-xs font-semibold text-slate-700 flex items-center justify-center gap-2 transition">
+                                    <i class="fa-brands fa-google text-red-500"></i> Google
+                                </button>
+                                <button onclick="simulateSocialAuth('SMS OTP')" class="border border-slate-200 hover:bg-slate-50 rounded-xl py-2 px-3 text-xs font-semibold text-slate-700 flex items-center justify-center gap-2 transition">
+                                    <i class="fa-solid fa-mobile-screen-button text-brand-600"></i> Mobile OTP
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Pharmacist Consultation Modal -->
+    <div id="pharmacistModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4">
+            <button onclick="closePharmacistModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <div class="flex items-center gap-3 border-b pb-4">
+                <div class="w-12 h-12 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-user-doctor"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-navy-900 text-base">Chat With Pharmacist</h3>
+                    <p class="text-xs text-brand-600 font-medium">On Duty: Mr. Nimal Jayasinghe (Reg #4567-LK)</p>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 rounded-xl p-4 h-48 overflow-y-auto space-y-3 text-xs">
+                <div class="bg-white border p-2.5 rounded-lg max-w-[80%] text-slate-700">
+                    Hello! Welcome to MediQuick Pharmacy. How can I help you regarding your prescription or medication today?
+                </div>
+            </div>
+
+            <div class="flex gap-2">
+                <input type="text" placeholder="Type your health query..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs focus:outline-none focus:border-brand-500 bg-slate-50">
+                <button onclick="showToast('Message sent to duty pharmacist!')" class="bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global Footer -->
+    <footer class="bg-navy-900 text-slate-400 text-xs py-12 border-t border-slate-800">
+        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div class="space-y-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-brand-500 flex items-center justify-center text-white">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                    </div>
+                    <span class="text-base font-bold text-white">MediQuick Pharmacy</span>
+                </div>
+                <p class="leading-relaxed text-slate-400">Your trusted healthcare partner in Kurunegala & Colombo. Sourcing 100% authentic medicine with express delivery.</p>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold text-sm mb-3">Quick Navigation</h4>
+                <ul class="space-y-2">
+                    <li><button onclick="switchView('home')" class="hover:text-brand-500 transition">Home</button></li>
+                    <li><button onclick="switchView('shop')" class="hover:text-brand-500 transition">Shop Catalog</button></li>
+                    <li><button onclick="switchView('prescription')" class="hover:text-brand-500 transition">Prescription Services</button></li>
+                    <li><button onclick="switchView('health-hub')" class="hover:text-brand-500 transition">Health Hub & Articles</button></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold text-sm mb-3">Regulatory Details</h4>
+                <ul class="space-y-2 text-slate-400">
+                    <li>Pharmacy License: #PMC-SRL-9872</li>
+                    <li>Reg. Pharmacist No: 4567-LK</li>
+                    <li>Privacy Policy & Terms</li>
+                    <li>NMRA Quality Approved</li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold text-sm mb-3">Contact Support</h4>
+                <p class="mb-1"><i class="fa-solid fa-location-dot mr-2 text-brand-500"></i> No. 123, Colombo Rd, Kurunegala</p>
+                <p class="mb-1"><i class="fa-solid fa-phone mr-2 text-brand-500"></i> +94 37 222 3344</p>
+                <p><i class="fa-solid fa-envelope mr-2 text-brand-500"></i> support@mediquick.lk</p>
+            </div>
+        </div>
+
+        <div class="container mx-auto px-4 pt-6 border-t border-slate-800 text-center flex flex-col sm:flex-row justify-between items-center gap-2">
+            <p>&copy; 2026 MediQuick Pharmacy. All rights reserved.</p>
+            <p class="text-slate-500">Powered by Pharmacy Tech Solutions</p>
+        </div>
+    </footer>
+
+    <script>
+        const productsDB = [
+            { id: 1, name: "Panadol Advance 500mg (10 Tablets)", category: "Pain Relief", price: 450, rx: false, inStock: true, icon: "fa-pills", rating: 4.8 },
+            { id: 2, name: "Vitamin C 1000mg Immunity Boost", category: "Vitamins", price: 1250, rx: false, inStock: true, icon: "fa-vial-circle-check", rating: 4.9 },
+            { id: 3, name: "Travel Emergency First Aid Kit", category: "First Aid", price: 3200, rx: false, inStock: true, icon: "fa-kit-medical", rating: 4.6 },
+            { id: 4, name: "Hydrating Facial Skin Repair Cream", category: "Personal Care", price: 1890, rx: false, inStock: true, icon: "fa-pump-soap", rating: 4.7 },
+            { id: 5, name: "Amoxicillin 500mg Capsules (10s)", category: "Medicines", price: 950, rx: true, inStock: true, icon: "fa-prescription-bottle-medical", rating: 4.8 },
+            { id: 6, name: "Dextromethorphan Cough Syrup 100ml", category: "Medicines", price: 850, rx: true, inStock: true, icon: "fa-bottle-droplet", rating: 4.5 },
+            { id: 7, name: "Digital Infrared Thermometer", category: "First Aid", price: 4800, rx: false, inStock: false, icon: "fa-temperature-high", rating: 4.9 },
+            { id: 8, name: "Hand Sanitizer Gel 500ml", category: "Personal Care", price: 550, rx: false, inStock: true, icon: "fa-hand-holding-medical", rating: 4.7 }
+        ];
+
+        let cart = [
+            { id: 1, name: "Panadol Advance 500mg", price: 450, qty: 2, rx: false },
+            { id: 5, name: "Amoxicillin 500mg Capsules", price: 950, qty: 1, rx: true }
+        ];
+
+        let selectedProduct = productsDB[4]; // Amoxicillin default detail
+        let appliedDiscount = 0;
+
+        let currentUser = null; // Stored user object when logged in
+
+        function handleAccountNav() {
+            if (currentUser) {
+                switchView('account');
+            } else {
+                switchView('login');
+            }
+        }
+
+        function switchAuthTab(tab) {
+            const loginForm = document.getElementById('authLoginForm');
+            const regForm = document.getElementById('authRegisterForm');
+            const tabBtnLogin = document.getElementById('tabBtnLogin');
+            const tabBtnRegister = document.getElementById('tabBtnRegister');
+
+            if (tab === 'login') {
+                loginForm.classList.remove('hidden');
+                regForm.classList.add('hidden');
+                tabBtnLogin.className = "py-2.5 rounded-xl bg-white text-navy-900 shadow-sm transition";
+                tabBtnRegister.className = "py-2.5 rounded-xl hover:text-navy-900 transition";
+            } else {
+                regForm.classList.remove('hidden');
+                loginForm.classList.add('hidden');
+                tabBtnRegister.className = "py-2.5 rounded-xl bg-white text-navy-900 shadow-sm transition";
+                tabBtnLogin.className = "py-2.5 rounded-xl hover:text-navy-900 transition";
+            }
+        }
+
+        function updateAuthUI() {
+            const navAuthLabel = document.getElementById('navAuthLabel');
+            if (currentUser) {
+                if (navAuthLabel) navAuthLabel.textContent = currentUser.name.split(' ')[0];
+            } else {
+                if (navAuthLabel) navAuthLabel.textContent = "Sign In";
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            currentUser = {
+                name: "Kamal Perera",
+                email: email || "kamal@example.com",
+                id: "MQ-9021",
+                phone: "+94 77 987 6543"
+            };
+            updateAuthUI();
+            showToast(`Welcome back, ${currentUser.name}!`);
+            switchView('account');
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const phone = document.getElementById('regPhone').value;
+
+            currentUser = {
+                name: name || "New Patient",
+                email: email,
+                phone: phone,
+                id: `MQ-${Math.floor(1000 + Math.random() * 9000)}`
+            };
+
+            updateAuthUI();
+            showToast(`Account created! Welcome, ${currentUser.name}!`);
+            switchView('account');
+        }
+
+        function simulateSocialAuth(method) {
+            currentUser = {
+                name: "Kamal Perera",
+                email: "kamal.perera@gmail.com",
+                id: "MQ-9021",
+                phone: "+94 77 987 6543"
+            };
+            updateAuthUI();
+            showToast(`Signed in via ${method}!`);
+            switchView('account');
+        }
+
+        function logout() {
+            currentUser = null;
+            updateAuthUI();
+            showToast("Successfully logged out.");
+            switchView('home');
+        }
+
+        function switchView(viewId) {
+            document.querySelectorAll('.view-section').forEach(sec => {
+                sec.classList.remove('active-view');
+            });
+            const targetView = document.getElementById('view-' + viewId);
+            if (targetView) {
+                targetView.classList.add('active-view');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // Update Nav Highlights
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if (btn.getAttribute('data-target') === viewId) {
+                    btn.classList.add('bg-slate-100', 'text-brand-600', 'font-bold');
+                } else {
+                    btn.classList.remove('bg-slate-100', 'text-brand-600', 'font-bold');
+                }
+            });
+
+            if (viewId === 'cart-checkout') renderCartView();
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobileDrawer').classList.toggle('hidden');
+        }
+
+        function updateCartBadge() {
+            const totalQty = cart.reduce((acc, item) => acc + item.qty, 0);
+            document.getElementById('cartCountBadge').textContent = totalQty;
+        }
+
+        function showToast(message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = "bg-navy-900 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-xl flex items-center gap-2 border border-slate-700 pointer-events-auto transition duration-300";
+            toast.innerHTML = `<i class="fa-solid fa-circle-check text-brand-500 text-sm"></i> ${message}`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function addToCart(productId) {
+            const prod = productsDB.find(p => p.id === productId);
+            if (!prod) return;
+
+            const existing = cart.find(item => item.id === productId);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ id: prod.id, name: prod.name, price: prod.price, qty: 1, rx: prod.rx });
+            }
+
+            updateCartBadge();
+            showToast(`Added ${prod.name} to cart!`);
+        }
+
+        function renderFeaturedHome() {
+            const grid = document.getElementById('homeFeaturedGrid');
+            if (!grid) return;
+            grid.innerHTML = productsDB.slice(0, 4).map(prod => `
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600 px-2 py-0.5 rounded">${prod.category}</span>
+                            ${prod.rx ? '<span class="text-[10px] font-bold bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">Rx</span>' : ''}
+                        </div>
+                        <div class="bg-slate-50 rounded-xl h-36 flex items-center justify-center text-brand-500 mb-4 cursor-pointer" onclick="openProductDetail(${prod.id})">
+                            <i class="fa-solid ${prod.icon} text-5xl"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-sm mb-1 hover:text-brand-600 cursor-pointer" onclick="openProductDetail(${prod.id})">${prod.name}</h3>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <span class="font-extrabold text-navy-900 text-sm">LKR ${prod.price.toLocaleString()}.00</span>
+                        <button onclick="addToCart(${prod.id})" class="bg-brand-500 hover:bg-brand-600 text-white font-bold p-2.5 rounded-xl text-xs transition">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderShopProducts(products) {
+            const grid = document.getElementById('shopProductsGrid');
+            if (!grid) return;
+            document.getElementById('shopCountSpan').textContent = products.length;
+
+            grid.innerHTML = products.map(prod => `
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-600 px-2 py-0.5 rounded">${prod.category}</span>
+                            ${prod.rx ? '<span class="text-[10px] font-bold bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">Rx Required</span>' : ''}
+                        </div>
+                        <div class="bg-slate-50 rounded-xl h-40 flex items-center justify-center text-brand-500 mb-4 cursor-pointer" onclick="openProductDetail(${prod.id})">
+                            <i class="fa-solid ${prod.icon} text-6xl"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-sm mb-1 hover:text-brand-600 cursor-pointer" onclick="openProductDetail(${prod.id})">${prod.name}</h3>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <div>
+                            <span class="font-extrabold text-navy-900 text-sm block">LKR ${prod.price.toLocaleString()}.00</span>
+                            <span class="text-[10px] ${prod.inStock ? 'text-brand-600' : 'text-red-500'} font-bold">${prod.inStock ? 'In Stock' : 'Out of Stock'}</span>
+                        </div>
+                        <button onclick="addToCart(${prod.id})" ${!prod.inStock ? 'disabled class="bg-slate-200 text-slate-400 font-bold p-2.5 rounded-xl text-xs cursor-not-allowed"' : 'class="bg-brand-500 hover:bg-brand-600 text-white font-bold p-2.5 rounded-xl text-xs transition"'}>
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterProducts() {
+            const query = document.getElementById('shopSearchInput').value.toLowerCase();
+            const rxOnly = document.getElementById('rxOnlyCheckbox').checked;
+            const selectedCat = document.querySelector('input[name="catFilter"]:checked').value;
+            const sortVal = document.getElementById('shopSortSelect').value;
+
+            let filtered = productsDB.filter(prod => {
+                const matchesSearch = prod.name.toLowerCase().includes(query) || prod.category.toLowerCase().includes(query);
+                const matchesRx = !rxOnly || prod.rx;
+                const matchesCat = selectedCat === 'All' || prod.category === selectedCat;
+                return matchesSearch && matchesRx && matchesCat;
+            });
+
+            if (sortVal === 'low-high') filtered.sort((a,b) => a.price - b.price);
+            if (sortVal === 'high-low') filtered.sort((a,b) => b.price - a.price);
+
+            renderShopProducts(filtered);
+        }
+
+        function filterShopCategory(catName) {
+            switchView('shop');
+            const radio = document.querySelector(`input[name="catFilter"][value="${catName}"]`);
+            if (radio) {
+                radio.checked = true;
+                filterProducts();
+            }
+        }
+
+        function resetShopFilters() {
+            document.getElementById('shopSearchInput').value = '';
+            document.getElementById('rxOnlyCheckbox').checked = false;
+            document.querySelector('input[name="catFilter"][value="All"]').checked = true;
+            filterProducts();
+        }
+
+        function openProductDetail(productId) {
+            const prod = productsDB.find(p => p.id === productId);
+            if (!prod) return;
+            selectedProduct = prod;
+
+            document.getElementById('detailTitle').textContent = prod.name;
+            document.getElementById('detailCategory').textContent = prod.category;
+            document.getElementById('detailPrice').textContent = `LKR ${prod.price.toLocaleString()}.00`;
+            document.getElementById('detailBreadcrumbName').textContent = prod.name;
+            document.getElementById('detailIcon').className = `fa-solid ${prod.icon} text-8xl text-brand-500/40`;
+            document.getElementById('detailQty').textContent = '1';
+
+            const rxBox = document.getElementById('detailRxBox');
+            if (prod.rx) rxBox.classList.remove('hidden');
+            else rxBox.classList.add('hidden');
+
+            switchView('product-detail');
+        }
+
+        function adjustDetailQty(amount) {
+            const qtySpan = document.getElementById('detailQty');
+            let current = parseInt(qtySpan.textContent);
+            current += amount;
+            if (current >= 1) qtySpan.textContent = current;
+        }
+
+        function addSelectedToCart() {
+            if (!selectedProduct) return;
+            const qty = parseInt(document.getElementById('detailQty').textContent);
+            const existing = cart.find(i => i.id === selectedProduct.id);
+            if (existing) {
+                existing.qty += qty;
+            } else {
+                cart.push({ id: selectedProduct.id, name: selectedProduct.name, price: selectedProduct.price, qty: qty, rx: selectedProduct.rx });
+            }
+            updateCartBadge();
+            showToast(`Added ${qty}x ${selectedProduct.name} to cart!`);
+        }
+
+        function renderCartView() {
+            const container = document.getElementById('cartItemsContainer');
+            if (!container) return;
+
+            document.getElementById('cartHeaderQty').textContent = `${cart.reduce((a,b)=>a+b.qty,0)} Items`;
+
+            if (cart.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-slate-400 text-xs">Your cart is empty. <button onclick="switchView('shop')" class="text-brand-600 font-bold underline">Shop Now</button></div>`;
+            } else {
+                container.innerHTML = cart.map(item => `
+                    <div class="flex items-center justify-between border-b pb-4 text-xs">
+                        <div class="space-y-1">
+                            <h4 class="font-bold text-slate-900">${item.name}</h4>
+                            <div class="text-slate-500">LKR ${item.price.toLocaleString()}.00 each</div>
+                            ${item.rx ? '<span class="text-[10px] font-bold bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">Rx Required</span>' : ''}
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="flex items-center border border-slate-200 rounded-lg bg-slate-50">
+                                <button onclick="updateCartItemQty(${item.id}, -1)" class="px-2 py-1 font-bold text-slate-600 hover:bg-slate-200 rounded-l">-</button>
+                                <span class="px-3 font-bold">${item.qty}</span>
+                                <button onclick="updateCartItemQty(${item.id}, 1)" class="px-2 py-1 font-bold text-slate-600 hover:bg-slate-200 rounded-r">+</button>
+                            </div>
+                            <div class="font-bold text-navy-900 min-w-[80px] text-right">LKR ${(item.price * item.qty).toLocaleString()}.00</div>
+                            <button onclick="removeCartItem(${item.id})" class="text-slate-400 hover:text-red-500"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            calculateCartTotals();
+        }
+
+        function updateCartItemQty(id, change) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.qty += change;
+                if (item.qty <= 0) removeCartItem(id);
+                else {
+                    updateCartBadge();
+                    renderCartView();
+                }
+            }
+        }
+
+        function removeCartItem(id) {
+            cart = cart.filter(i => i.id !== id);
+            updateCartBadge();
+            renderCartView();
+        }
+
+        function calculateCartTotals() {
+            const subtotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+            const delivery = subtotal > 0 ? 250 : 0;
+            const total = Math.max(0, subtotal + delivery - appliedDiscount);
+
+            document.getElementById('summarySubtotal').textContent = `LKR ${subtotal.toLocaleString()}.00`;
+            document.getElementById('summaryDelivery').textContent = `LKR ${delivery.toLocaleString()}.00`;
+            document.getElementById('summaryDiscount').textContent = `- LKR ${appliedDiscount.toLocaleString()}.00`;
+            document.getElementById('summaryTotal').textContent = `LKR ${total.toLocaleString()}.00`;
+        }
+
+        function applyPromoCode() {
+            const val = document.getElementById('promoInput').value.trim().toUpperCase();
+            if (val === 'MEDI10') {
+                appliedDiscount = 300;
+                showToast('Promo Code Applied! LKR 300 Discount.');
+                calculateCartTotals();
+            } else {
+                showToast('Invalid Promo Code. Try "MEDI10"');
+            }
+        }
+
+        function processFinalCheckout() {
+            if (cart.length === 0) {
+                showToast('Please add items to your cart before proceeding!');
+                return;
+            }
+
+            const total = document.getElementById('summaryTotal').textContent;
+            document.getElementById('confirmTotal').textContent = total;
+            cart = [];
+            updateCartBadge();
+            switchView('confirmation');
+        }
+
+        function triggerRxInput() {
+            document.getElementById('rxFileInput').click();
+        }
+
+        function handleRxFileSelect(e) {
+            if (e.target.files && e.target.files[0]) {
+                document.getElementById('rxFileName').textContent = `Attached: ${e.target.files[0].name}`;
+            }
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            document.getElementById('rxDropzone').classList.add('dropzone-active');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            document.getElementById('rxDropzone').classList.remove('dropzone-active');
+        }
+
+        function handleFileDrop(e) {
+            e.preventDefault();
+            document.getElementById('rxDropzone').classList.remove('dropzone-active');
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                document.getElementById('rxFileName').textContent = `Attached: ${e.dataTransfer.files[0].name}`;
+            }
+        }
+
+        function submitPrescription(e) {
+            e.preventDefault();
+            showToast('Prescription submitted successfully for review!');
+            switchView('confirmation');
+        }
+
+        function openPharmacistModal() {
+            document.getElementById('pharmacistModal').classList.remove('hidden');
+        }
+
+        function closePharmacistModal() {
+            document.getElementById('pharmacistModal').classList.add('hidden');
+        }
+
+        function handleGlobalSearch(e) {
+            if (e.key === 'Enter') {
+                const query = e.target.value;
+                switchView('shop');
+                document.getElementById('shopSearchInput').value = query;
+                filterProducts();
+            }
+        }
+
+        function performHomeSearch() {
+            const query = document.getElementById('homeSearchInput').value;
+            switchView('shop');
+            document.getElementById('shopSearchInput').value = query;
+            filterProducts();
+        }
+
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            showToast('Thank you for your message! Our team will contact you shortly.');
+        }
+
+        function trackOrderSim() {
+            showToast('Order status updated!');
+        }
+
+        window.onload = function() {
+            renderFeaturedHome();
+            renderShopProducts(productsDB);
+            updateCartBadge();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,816 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>MediQuick Build Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --ground:#F4F7F5; --surface:#FFFFFF; --sunk:#EAF1ED;
+  --ink:#0F172A; --muted:#52615C; --rule:#D5E0DA;
+  --brand:#047857; --brand-fill:#00B074; --brand-soft:#DCF5EA;
+  --cust:#047857; --cust-bg:#DCF5EA;
+  --staff:#1D4ED8; --staff-bg:#E0E8FD;
+  --admin:#A2480A; --admin-bg:#FCEBD9;
+  --rx:#B91C1C; --rx-bg:#FDE4E4;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --body:"Figtree","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D1412; --surface:#141E1B; --sunk:#1A2723;
+    --ink:#E4ECE8; --muted:#97A8A1; --rule:#2A3A35;
+    --brand:#3DD6A0; --brand-fill:#00B074; --brand-soft:#123A2D;
+    --cust:#3DD6A0; --cust-bg:#123A2D;
+    --staff:#8AB0FF; --staff-bg:#1A2747;
+    --admin:#F5B574; --admin-bg:#3A2614;
+    --rx:#FF8A8A; --rx-bg:#3F1A1A;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D1412; --surface:#141E1B; --sunk:#1A2723;
+  --ink:#E4ECE8; --muted:#97A8A1; --rule:#2A3A35;
+  --brand:#3DD6A0; --brand-fill:#00B074; --brand-soft:#123A2D;
+  --cust:#3DD6A0; --cust-bg:#123A2D;
+  --staff:#8AB0FF; --staff-bg:#1A2747;
+  --admin:#F5B574; --admin-bg:#3A2614;
+  --rx:#FF8A8A; --rx-bg:#3F1A1A;
+}
+
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;padding-inline:20px;padding-block:0 64px}
+.shell{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:40px}
+@media (min-width:1080px){.shell{grid-template-columns:200px minmax(0,1fr)}}
+
+/* TOC */
+nav.toc{display:none}
+@media (min-width:1080px){
+  nav.toc{display:block;position:sticky;top:0;align-self:start;padding-top:40px;font-size:14px}
+  nav.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+  nav.toc a{display:block;padding:5px 10px;border-radius:6px;color:var(--muted);text-decoration:none}
+  nav.toc a:hover{background:var(--sunk);color:var(--ink)}
+  nav.toc .label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 10px 10px;font-weight:600}
+}
+a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+
+main{min-width:0;padding-top:40px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(34px,5vw,50px);letter-spacing:-.02em}
+h2{font-size:28px;letter-spacing:-.01em}
+h3{font-size:19px}
+p{margin:0;max-width:68ch}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--brand)}
+.muted{color:var(--muted)}
+code,.mono{font-family:var(--mono);font-size:.86em}
+
+/* Header spec sheet */
+header.cover{display:grid;gap:18px;padding-bottom:32px;border-bottom:1px solid var(--rule)}
+.cover .lede{font-size:18px;color:var(--muted)}
+.rxmark{font-family:var(--display);color:var(--brand-fill)}
+dl.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:10px;overflow:hidden;margin:6px 0 0}
+dl.meta div{background:var(--surface);padding:12px 16px}
+dl.meta dt{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+dl.meta dd{margin:2px 0 0;font-weight:600}
+
+section{padding-block:44px 0;display:grid;gap:18px}
+section > h2{display:flex;align-items:baseline;gap:12px}
+section > h2 .num{font-family:var(--mono);font-size:14px;color:var(--brand);font-weight:600}
+.sub{display:grid;gap:12px;margin-top:10px}
+
+/* Tables */
+.tbl{overflow-x:auto;border:1px solid var(--rule);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{text-align:left;padding:9px 14px;border-bottom:1px solid var(--rule);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--sunk);white-space:nowrap}
+td.id{font-family:var(--mono);font-size:13px;color:var(--brand);white-space:nowrap}
+td.c{text-align:center}
+.group td{background:var(--sunk);font-weight:700;font-size:13px;letter-spacing:.04em}
+
+.pri{display:inline-block;font-size:12px;font-weight:700;padding:1px 8px;border-radius:99px;white-space:nowrap}
+.must{background:var(--brand-soft);color:var(--brand)}
+.should{background:var(--staff-bg);color:var(--staff)}
+.could{background:var(--sunk);color:var(--muted)}
+.rx{background:var(--rx-bg);color:var(--rx);font-family:var(--mono)}
+.yes{color:var(--brand);font-weight:700}
+.no{color:var(--rule)}
+
+/* Roles */
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.role{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:16px 18px;display:grid;gap:8px;align-content:start}
+.role h3{display:flex;align-items:center;gap:8px}
+.chip{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;padding:2px 8px;border-radius:5px;font-family:var(--body)}
+.chip.cust{background:var(--cust-bg);color:var(--cust)}
+.chip.staff{background:var(--staff-bg);color:var(--staff)}
+.chip.admin{background:var(--admin-bg);color:var(--admin)}
+.role ul{margin:0;padding-left:18px;font-size:14.5px;color:var(--muted)}
+.role code{color:var(--ink)}
+
+ul.plain{margin:0;padding-left:20px;display:grid;gap:6px;max-width:72ch}
+
+/* Figures */
+figure{margin:0;background:var(--surface);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+figure .draw{overflow-x:auto;padding:20px}
+figure svg.arch{display:block;width:100%;height:auto;min-width:640px;color:var(--ink)}
+figure pre.mermaid{margin:0;display:flex;justify-content:center;min-width:min-content;background:transparent}
+figcaption{padding:10px 18px;border-top:1px solid var(--rule);font-size:13.5px;color:var(--muted);background:var(--sunk)}
+figcaption b{color:var(--ink);font-weight:600}
+svg .box{fill:var(--surface);stroke:currentColor;stroke-width:1.2}
+svg .sunk{fill:var(--sunk);stroke:var(--rule)}
+svg .bound{fill:none;stroke:var(--muted);stroke-dasharray:5 4}
+svg .edge{stroke:currentColor;stroke-width:1.4;fill:none}
+svg .ext{stroke:var(--brand);stroke-width:1.6;fill:none}
+svg text{fill:currentColor;font-family:var(--body);font-size:13px}
+svg .t{font-weight:700;font-size:14px}
+svg .m{font-family:var(--mono);font-size:12px}
+svg .lbl{font-size:11.5px;fill:var(--muted)}
+svg .elbl{font-size:11.5px;fill:var(--brand);font-weight:600}
+svg .pc{fill:var(--cust-bg);stroke:var(--cust)}
+svg .ps{fill:var(--staff-bg);stroke:var(--staff)}
+svg .pa{fill:var(--admin-bg);stroke:var(--admin)}
+svg .tc{fill:var(--cust);font-weight:600}
+svg .ts{fill:var(--staff);font-weight:600}
+svg .ta{fill:var(--admin);font-weight:600}
+svg .pay{fill:var(--brand-soft);stroke:var(--brand)}
+
+pre.tree{margin:0;padding:18px 20px;background:var(--surface);border:1px solid var(--rule);border-radius:10px;overflow-x:auto;font-family:var(--mono);font-size:13px;line-height:1.7}
+pre.tree .cm{color:var(--muted)}
+
+/* DB cards */
+.dbgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;align-items:start}
+.dbt{background:var(--surface);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+.dbt header{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:10px 14px;background:var(--sunk);border-bottom:1px solid var(--rule)}
+.dbt header b{font-family:var(--mono);font-size:14px}
+.dbt header span{font-size:12.5px;color:var(--muted);text-align:right}
+.dbt table{font-size:12.5px}
+.dbt td{padding:5px 14px}
+.dbt td:first-child{font-family:var(--mono);white-space:nowrap}
+.dbt td:nth-child(2){font-family:var(--mono);color:var(--muted);white-space:nowrap}
+.key{font-family:var(--mono);font-size:10.5px;font-weight:600;padding:0 5px;border-radius:4px;margin-left:6px}
+.key.pk{background:var(--admin-bg);color:var(--admin)}
+.key.fk{background:var(--staff-bg);color:var(--staff)}
+.key.uk{background:var(--brand-soft);color:var(--brand)}
+
+/* Word budget chart */
+.budget{background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:20px;display:grid;gap:12px}
+.brow{display:grid;grid-template-columns:minmax(140px,210px) 1fr 56px;gap:14px;align-items:center;font-size:14px}
+.brow .bar{height:18px;background:var(--sunk);border-radius:4px;position:relative}
+.brow .bar i{position:absolute;inset:0 auto 0 0;background:var(--brand-fill);border-radius:4px}
+.brow .n{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;font-size:13px}
+.axis{display:grid;grid-template-columns:minmax(140px,210px) 1fr 56px;gap:14px;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.axis div{position:relative;height:14px}
+.axis span{position:absolute;transform:translateX(-50%)}
+.axis span:first-child{transform:none}
+.axis span:last-child{transform:translateX(-100%)}
+@media (max-width:560px){.brow,.axis{grid-template-columns:110px 1fr 44px;gap:8px;font-size:13px}}
+
+.note{border-left:3px solid var(--brand-fill);padding:4px 0 4px 14px;color:var(--muted);font-size:14.5px;max-width:72ch}
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--rule);font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="shell">
+<nav class="toc" aria-label="Contents">
+  <p class="label">Contents</p>
+  <ol>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#prd">Requirements</a></li>
+    <li><a href="#access">Permissions</a></li>
+    <li><a href="#arch">Architecture</a></li>
+    <li><a href="#diagrams">Diagrams</a></li>
+    <li><a href="#db">Database plan</a></li>
+    <li><a href="#schedule">Schedule &amp; budget</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="cover">
+  <p class="eyebrow">CSE4206 · WRIT1 · Product requirements &amp; design pack</p>
+  <h1><span class="rxmark">℞</span> MediQuick Pharmacy</h1>
+  <p class="lede">A PHP and MySQL web application that lets customers in Kurunegala buy medicines online, upload prescriptions for Rx-only items, and get help from pharmacy staff, while admins run the system.</p>
+  <dl class="meta">
+    <div><dt>Client</dt><dd>MediQuick Pharmacy, Kurunegala</dd></div>
+    <div><dt>Module</dt><dd>CSE4206 Web App Development</dd></div>
+    <div><dt>Stack</dt><dd>PHP 8 · MySQL · Bootstrap 5</dd></div>
+    <div><dt>Users</dt><dd>Customer · Staff · Admin</dd></div>
+    <div><dt>Report limit</dt><dd>2,800 words</dd></div>
+  </dl>
+</header>
+
+<!-- 1 -->
+<section id="overview">
+  <h2><span class="num">1</span>Overview</h2>
+  <p>The site replaces walk-in-only sales with a catalogue customers can search, a checkout with card or cash on delivery, and a prescription check that stops Rx-only medicines from shipping until a pharmacist approves. Everything runs on one XAMPP install, with no frameworks beyond Bootstrap, so every line can be explained in the report.</p>
+
+  <div class="tbl"><table>
+    <thead><tr><th>Layer</th><th>Technology</th><th>Used for</th></tr></thead>
+    <tbody>
+      <tr><td>Front-end</td><td>HTML5, CSS3, JavaScript, Bootstrap 5</td><td>Responsive pages, forms, client-side validation, modals</td></tr>
+      <tr><td>Back-end</td><td>PHP 8 (plain, no framework)</td><td>Sessions, auth, business rules, file uploads, payment callback</td></tr>
+      <tr><td>Database</td><td>MySQL via phpMyAdmin</td><td>12 InnoDB tables with foreign keys (see §6)</td></tr>
+      <tr><td>Local server</td><td>XAMPP (Apache + PHP + MySQL)</td><td>Runs the whole system on <code>localhost</code></td></tr>
+      <tr><td>Payment</td><td>PayHere sandbox + cash on delivery</td><td>Card payments with server-side signature check, no real money</td></tr>
+      <tr><td>Charts</td><td>Chart.js</td><td>Revenue and order charts on the admin dashboard</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="roles">
+    <div class="role">
+      <h3><span class="chip cust">Customer</span></h3>
+      <ul>
+        <li>Registers, logs in, edits profile</li>
+        <li>Searches and filters medicines</li>
+        <li>Uploads prescriptions</li>
+        <li>Orders, pays, tracks deliveries</li>
+        <li>Sends inquiries, reads replies</li>
+      </ul>
+      <p class="muted" style="font-size:13px">Lands on <code>/account/</code></p>
+    </div>
+    <div class="role">
+      <h3><span class="chip staff">Staff</span></h3>
+      <ul>
+        <li>Verifies prescriptions</li>
+        <li>Moves orders from confirmed to delivered</li>
+        <li>Manages products, stock, expiry</li>
+        <li>Answers customer inquiries</li>
+        <li>Publishes health articles</li>
+      </ul>
+      <p class="muted" style="font-size:13px">Lands on <code>/staff/</code></p>
+    </div>
+    <div class="role">
+      <h3><span class="chip admin">Admin</span></h3>
+      <ul>
+        <li>Everything staff can do</li>
+        <li>Creates and suspends staff accounts</li>
+        <li>Views reports and sales charts</li>
+        <li>Reads the audit log</li>
+        <li>Manages categories and testimonials</li>
+      </ul>
+      <p class="muted" style="font-size:13px">Lands on <code>/admin/</code></p>
+    </div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section id="prd">
+  <h2><span class="num">2</span>Product requirements</h2>
+
+  <div class="sub">
+    <h3>Goals</h3>
+    <ul class="plain">
+      <li>Customers can find a medicine and place an order in under 3 minutes.</li>
+      <li>No Rx-only medicine is confirmed without an approved prescription on file.</li>
+      <li>Staff handle prescriptions, orders, stock and inquiries from one panel.</li>
+      <li>Admins can see who changed what, and when.</li>
+    </ul>
+  </div>
+
+  <div class="sub">
+    <h3>Functional requirements</h3>
+    <p class="muted">Priority uses MoSCoW. All <span class="pri must">Must</span> items are needed to cover the brief. <span class="pri should">Should</span> items raise the grade band. <span class="pri could">Could</span> items are extras if time allows.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>ID</th><th>Requirement</th><th>Role</th><th>Priority</th></tr></thead>
+      <tbody>
+        <tr class="group"><td colspan="4">Accounts</td></tr>
+        <tr><td class="id">FR-01</td><td>Register with name, email, phone and password (min 8 chars). Email must be unique.</td><td>Guest</td><td><span class="pri must">Must</span></td></tr>
+        <tr><td class="id">FR-02</td><td>Log in and log out. After login, each role is sent to its own dashboard.</td><td>All</td><td><span class="pri must">Must</span></td></tr>
+        <tr><td class="id">FR-03</td><td>Edit profile, delivery address and password.</td><td>All</td><td><span class="pri must">Must</span></td></tr>
+        <tr><td class="id">FR-04</td><td>Reset a forgotten password with an emailed link (needs SMTP set up in XAMPP).</td><td>All</td><td><span class="pri could">Could</span></td></tr>
+
+        <tr class="group"><td colspan="4">Catalogue &amp; search</td></tr>
+        <tr><td class="id">FR-05</td><td>Browse products by category: Prescription, OTC, Wellness, Personal care.</td><td>Guest</td><td><span class="pri must">Must</span></td></tr>
+        <tr><td class="id">FR-06</td><td>Search by brand or generic name. Filter by category, price range (LKR), <span class="pri rx">Rx</span> / OTC and in stock. Sort by price or name. 12 results per page.</td><td>Guest</td><td><span class="pri must">Must</span></td></tr>
+        <tr><td class="id">FR-07</td><td>Product page shows price, dosage guidelines, safety information, stock status and an Rx badge.</td><td>Guest</td><td><span class="pri must">Must</span></td></tr>
+
+        <tr class="group"><td colspan="4">Cart, checkout &amp; payment</td></tr>
+        <tr><td class="id">FR-08</td><td>Add, change quantity and remove cart items. Quantity can't exceed stock.</td><td>Customer</td><td><span class="pri must">Must</span></td></tr>
+        <tr><td class="id">FR-09</td><td>Checkout with delivery address, phone, and card or cash on delivery.</td><td>Customer</td><td><span class="pri must">Must</span></td></tr>
+        <tr><td class="id">FR-10</td><td>Card payment through PayHere sandbox. An order is confirmed only after the server verifies PayHere's <code>md5sig</code> callback.</td><td>Customer</td><td><span class="pri must">Must</span></td></tr>
+        <tr><td class="id">FR-11</td><td>Order history with a status tracker: placed, verified, confirmed, packed, dispatched, delivered.</td><td>Customer</td><td><span class="pri must">Must</span></td></tr>
+        <tr><td class="id">FR-12</td><td>Cancel an order before it is packed.</td><td>Customer</td><td><span class="pri should">Should</span></td></tr>
+
+        <tr class="group"><td colspan="4">Prescriptions</td></tr>
+        <tr><td class="id">FR-13</td><td>Upload a prescription (JPG, PNG or PDF, max 5 MB) with the doctor's name and SLMC registration number.</td><td>Customer</td><td><span class="pri must">Must</span></td></tr>
+        <tr><td class="id">FR-14</td><td>A cart with any <span class="pri rx">Rx</span> item can't be checked out without an attached prescription.</td><td>System</td><td><span class="pri must">Must</span></td></tr>
+        <tr><td class="id">FR-15</td><td>Review queue: view the file, approve or reject with a note. The customer is notified either way.</td><td>Staff</td><td><span class="pri must">Must</span></td></tr>
+
+        <tr class="group"><td colspan="4">Customer service</td></tr>
+        <tr><td class="id">FR-16</td><td>Contact form for guests and logged-in customers.</td><td>Guest</td><td><span class="pri must">Must</span></td></tr>
+        <tr><td class="id">FR-17</td><td>Staff reply to inquiries. Customers see the reply in their account.</td><td>Staff</td><td><span class="pri must">Must</span></td></tr>
+        <tr><td class="id">FR-18</td><td>In-app notifications with an unread count in the navbar (prescription reviewed, order status changed, inquiry answered).</td><td>Customer</td><td><span class="pri should">Should</span></td></tr>
+
+        <tr class="group"><td colspan="4">Pharmacy operations</td></tr>
+        <tr><td class="id">FR-19</td><td>Add, edit and deactivate products, with image, price, stock, reorder level and expiry date.</td><td>Staff</td><td><span class="pri must">Must</span></td></tr>
+        <tr><td class="id">FR-20</td><td>Low-stock list (stock at or below reorder level) and near-expiry list (within 90 days).</td><td>Staff</td><td><span class="pri should">Should</span></td></tr>
+        <tr><td class="id">FR-21</td><td>Update order status. Stock is deducted when an order becomes confirmed.</td><td>Staff</td><td><span class="pri must">Must</span></td></tr>
+        <tr><td class="id">FR-22</td><td>Write and publish health hub articles.</td><td>Staff</td><td><span class="pri could">Could</span></td></tr>
+
+        <tr class="group"><td colspan="4">Administration</td></tr>
+        <tr><td class="id">FR-23</td><td>Create staff accounts, suspend or reactivate any account, and change roles.</td><td>Admin</td><td><span class="pri must">Must</span></td></tr>
+        <tr><td class="id">FR-24</td><td>Dashboard with KPIs (orders today, pending prescriptions, revenue, low stock) and a Chart.js revenue chart.</td><td>Admin</td><td><span class="pri should">Should</span></td></tr>
+        <tr><td class="id">FR-25</td><td>Audit log of sensitive actions: login, prescription approve/reject, price change, role change.</td><td>Admin</td><td><span class="pri should">Should</span></td></tr>
+        <tr><td class="id">FR-26</td><td>Manage categories. Approve customer testimonials before they appear on the home page.</td><td>Admin</td><td><span class="pri could">Could</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="sub">
+    <h3>Traceability to the brief</h3>
+    <p class="muted">Each "Key website requirement" in the assessment brief, and where it is covered.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Brief requirement</th><th>Covered by</th><th>Tables</th></tr></thead>
+      <tbody>
+        <tr><td>Back-end database for customers, products, prescriptions, orders</td><td class="id">FR-01–26</td><td><code>users</code>, <code>products</code>, <code>prescriptions</code>, <code>orders</code></td></tr>
+        <tr><td>Online ordering and secure payment</td><td class="id">FR-08–12</td><td><code>orders</code>, <code>order_items</code>, <code>payments</code></td></tr>
+        <tr><td>Registration, login, profile management</td><td class="id">FR-01–04</td><td><code>users</code></td></tr>
+        <tr><td>Search and filtering</td><td class="id">FR-05–07</td><td><code>products</code>, <code>categories</code></td></tr>
+        <tr><td>Prescription upload and verification</td><td class="id">FR-13–15</td><td><code>prescriptions</code></td></tr>
+        <tr><td>Error handling and data validation</td><td class="id">NFR-03, NFR-04</td><td>All (constraints, <code>CHECK</code>, FKs)</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="sub">
+    <h3>Non-functional requirements</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>ID</th><th>Area</th><th>Requirement</th></tr></thead>
+      <tbody>
+        <tr><td class="id">NFR-01</td><td>Security</td><td>Passwords stored with <code>password_hash()</code>. All SQL runs through PDO prepared statements. All output escaped with <code>htmlspecialchars()</code>. CSRF token on every POST form. <code>session_regenerate_id()</code> on login. Role check at the top of every staff and admin page.</td></tr>
+        <tr><td class="id">NFR-02</td><td>Uploads</td><td>MIME type checked with <code>finfo</code>, max 5 MB, saved under a random filename in <code>uploads/rx/</code>. That folder blocks direct access with <code>.htaccess</code>, and files are served through PHP only to the owner and staff.</td></tr>
+        <tr><td class="id">NFR-03</td><td>Validation</td><td>HTML5 attributes and JavaScript give instant feedback. PHP repeats every check on the server, because browser checks can be bypassed.</td></tr>
+        <tr><td class="id">NFR-04</td><td>Error handling</td><td><code>try/catch</code> around database work. Users see plain messages that say what to fix. Technical errors go to a log, not the screen. Custom 404 and 403 pages.</td></tr>
+        <tr><td class="id">NFR-05</td><td>Integrity</td><td>Order, items, payment and stock update run in one transaction, so a failure leaves nothing half-saved.</td></tr>
+        <tr><td class="id">NFR-06</td><td>Responsive</td><td>Bootstrap grid, usable from 360 px phones to desktop.</td></tr>
+        <tr><td class="id">NFR-07</td><td>Performance</td><td>Paginated lists, compressed images, pages load in under 2 s on localhost.</td></tr>
+        <tr><td class="id">NFR-08</td><td>Accessibility</td><td>Label on every input, alt text on images, WCAG AA colour contrast, full keyboard navigation.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="sub">
+    <h3>Assumptions</h3>
+    <p class="muted">The brief allows added functionality when the assumptions are stated clearly.</p>
+    <ul class="plain">
+      <li>One branch in Kurunegala delivers island-wide. Delivery is a flat LKR 350, and free over LKR 5,000.</li>
+      <li>Payments use the PayHere sandbox, so no real money moves. Cash on delivery is also offered.</li>
+      <li>For Rx orders, card payment happens <em>after</em> the pharmacist approves, so rejected orders never need a refund.</li>
+      <li>Notifications are in-app only. SMS and email are future work.</li>
+      <li>Roles are fixed (customer, staff, admin) and stored in one column. A custom permission builder is out of scope.</li>
+      <li>The cart lives in the PHP session and is emptied at logout.</li>
+    </ul>
+  </div>
+
+  <div class="sub">
+    <h3>Out of scope</h3>
+    <ul class="plain">
+      <li>Live payments, SMS gateway, live delivery-rider map, multiple branches, mobile app.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 3 -->
+<section id="access">
+  <h2><span class="num">3</span>Permissions matrix</h2>
+  <p>A single <code>users.role</code> column drives this. Each protected page starts with <code>require_role('staff','admin')</code>, which sends anyone else to the 403 page.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Action</th><th class="c">Guest</th><th class="c"><span class="chip cust">Customer</span></th><th class="c"><span class="chip staff">Staff</span></th><th class="c"><span class="chip admin">Admin</span></th></tr></thead>
+    <tbody>
+      <tr><td>Browse, search, read health hub</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c yes">✓</td></tr>
+      <tr><td>Send an inquiry</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c no">—</td><td class="c no">—</td></tr>
+      <tr><td>Place orders, upload prescriptions</td><td class="c no">—</td><td class="c yes">✓</td><td class="c no">—</td><td class="c no">—</td></tr>
+      <tr><td>Track own orders, see notifications</td><td class="c no">—</td><td class="c yes">✓</td><td class="c no">—</td><td class="c no">—</td></tr>
+      <tr><td>Approve or reject prescriptions</td><td class="c no">—</td><td class="c no">—</td><td class="c yes">✓</td><td class="c yes">✓</td></tr>
+      <tr><td>Update order status</td><td class="c no">—</td><td class="c no">—</td><td class="c yes">✓</td><td class="c yes">✓</td></tr>
+      <tr><td>Manage products and stock</td><td class="c no">—</td><td class="c no">—</td><td class="c yes">✓</td><td class="c yes">✓</td></tr>
+      <tr><td>Reply to inquiries, publish articles</td><td class="c no">—</td><td class="c no">—</td><td class="c yes">✓</td><td class="c yes">✓</td></tr>
+      <tr><td>Create or suspend staff accounts</td><td class="c no">—</td><td class="c no">—</td><td class="c no">—</td><td class="c yes">✓</td></tr>
+      <tr><td>Reports, revenue chart, audit log</td><td class="c no">—</td><td class="c no">—</td><td class="c no">—</td><td class="c yes">✓</td></tr>
+      <tr><td>Manage categories, approve testimonials</td><td class="c no">—</td><td class="c no">—</td><td class="c no">—</td><td class="c yes">✓</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 4 -->
+<section id="arch">
+  <h2><span class="num">4</span>System architecture</h2>
+  <p>A classic three-tier setup. The browser only ever talks to Apache. PHP is the only thing that touches MySQL and the prescription files. PayHere confirms payments by calling the server directly, not through the customer's browser.</p>
+  <figure>
+    <div class="draw">
+      <svg class="arch" viewBox="0 0 880 350" role="img" aria-label="Three-tier architecture: the browser sends requests to Apache and PHP on XAMPP, PHP reads and writes MySQL through PDO and saves prescription files to a private uploads folder, and PayHere sends a signed server callback to PHP after the browser is redirected to checkout.">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker>
+        </defs>
+
+        <!-- Browser -->
+        <rect class="box" x="20" y="50" width="180" height="230" rx="10"/>
+        <text class="t" x="110" y="78" text-anchor="middle">Browser</text>
+        <text class="lbl" x="110" y="95" text-anchor="middle">Bootstrap 5 + JS</text>
+        <rect class="pc" x="40" y="110" width="140" height="34" rx="6"/>
+        <text class="tc" x="110" y="132" text-anchor="middle">Customer</text>
+        <rect class="ps" x="40" y="160" width="140" height="34" rx="6"/>
+        <text class="ts" x="110" y="182" text-anchor="middle">Staff</text>
+        <rect class="pa" x="40" y="210" width="140" height="34" rx="6"/>
+        <text class="ta" x="110" y="232" text-anchor="middle">Admin</text>
+
+        <!-- XAMPP boundary -->
+        <rect class="bound" x="235" y="20" width="405" height="285" rx="12"/>
+        <text class="lbl" x="251" y="40">XAMPP · localhost</text>
+
+        <!-- PHP -->
+        <rect class="box" x="265" y="55" width="190" height="225" rx="10"/>
+        <text class="t" x="360" y="82" text-anchor="middle">Apache + PHP 8</text>
+        <text class="m" x="283" y="115">/          public</text>
+        <text class="m" x="283" y="140">/account/  customer</text>
+        <text class="m" x="283" y="165">/staff/    staff</text>
+        <text class="m" x="283" y="190">/admin/    admin</text>
+        <text class="m" x="283" y="215">/includes/ db, auth,</text>
+        <text class="m" x="283" y="232">           csrf</text>
+
+        <!-- MySQL -->
+        <rect class="box" x="500" y="55" width="120" height="80" rx="10"/>
+        <text class="t" x="560" y="89" text-anchor="middle">MySQL</text>
+        <text class="m" x="560" y="110" text-anchor="middle">mediquick_db</text>
+
+        <!-- uploads -->
+        <rect class="sunk" x="500" y="160" width="120" height="62" rx="10"/>
+        <text class="m" x="560" y="187" text-anchor="middle">uploads/rx/</text>
+        <text class="lbl" x="560" y="206" text-anchor="middle">no direct access</text>
+
+        <!-- PayHere -->
+        <rect class="pay" x="680" y="205" width="180" height="75" rx="10"/>
+        <text class="t" x="770" y="237" text-anchor="middle">PayHere sandbox</text>
+        <text class="lbl" x="770" y="256" text-anchor="middle">card payments</text>
+
+        <!-- edges -->
+        <line class="edge" x1="200" y1="125" x2="263" y2="125" marker-end="url(#arr)"/>
+        <text class="lbl" x="232" y="117" text-anchor="middle">request</text>
+        <line class="edge" x1="265" y1="175" x2="202" y2="175" marker-end="url(#arr)"/>
+        <text class="lbl" x="232" y="167" text-anchor="middle">HTML</text>
+
+        <line class="edge" x1="455" y1="95" x2="498" y2="95" marker-end="url(#arr)"/>
+        <text class="lbl" x="477" y="87" text-anchor="middle">PDO</text>
+        <line class="edge" x1="455" y1="191" x2="498" y2="191" marker-end="url(#arr)"/>
+        <text class="lbl" x="477" y="183" text-anchor="middle">save</text>
+
+        <line class="ext" x1="680" y1="262" x2="457" y2="262" marker-end="url(#arr)" style="color:var(--brand)"/>
+        <text class="elbl" x="568" y="254" text-anchor="middle">notify_url + md5sig</text>
+
+        <path class="ext" d="M110 280 V325 H770 V283" marker-end="url(#arr)" style="color:var(--brand)"/>
+        <text class="elbl" x="440" y="342" text-anchor="middle">redirect to PayHere checkout</text>
+      </svg>
+    </div>
+    <figcaption><b>Figure 1.</b> Payment is the only path that leaves the server. The order is confirmed by the green server-to-server callback, never by the browser returning, so a customer can't fake a "paid" page.</figcaption>
+  </figure>
+
+  <div class="sub">
+    <h3>Folder structure</h3>
+<pre class="tree">mediquick/
+├── index.php  shop.php  product.php  cart.php  checkout.php
+├── prescription-upload.php  health-hub.php  contact.php
+├── login.php  register.php  logout.php
+├── account/       <span class="cm"># orders, prescriptions, notifications, profile</span>
+├── staff/         <span class="cm"># dashboard, rx-queue, orders, products, inquiries</span>
+├── admin/         <span class="cm"># dashboard, staff, reports, categories, audit-log</span>
+├── includes/
+│   ├── db.php       <span class="cm"># one PDO connection, ERRMODE_EXCEPTION</span>
+│   ├── auth.php     <span class="cm"># require_login(), require_role()</span>
+│   ├── csrf.php     <span class="cm"># csrf_field(), csrf_check()</span>
+│   └── header.php  footer.php
+├── payhere/notify.php   <span class="cm"># server callback, verifies md5sig</span>
+├── assets/        <span class="cm"># css/ js/ img/</span>
+├── uploads/rx/    <span class="cm"># .htaccess → Deny from all</span>
+└── database/schema.sql</pre>
+  </div>
+</section>
+
+<!-- 5 -->
+<section id="diagrams">
+  <h2><span class="num">5</span>Diagrams</h2>
+
+  <div class="sub">
+    <h3>Site map</h3>
+    <figure>
+      <div class="draw"><pre class="mermaid">
+flowchart TD
+  Home["Home"] --> Shop["Shop and search"]
+  Shop --> Product["Product detail"]
+  Home --> RxUp["Upload prescription"]
+  Home --> Hub["Health hub"]
+  Hub --> Article["Article"]
+  Home --> Contact["Contact and branches"]
+  Home --> Login["Login / Register"]
+  Product --> Cart["Cart"]
+  subgraph CUS["Customer area"]
+    Cart --> Checkout["Checkout"]
+    Checkout --> Pay["PayHere or COD"]
+    Pay --> Done["Order confirmation"]
+    Acc["My account"] --> MyOrders["Orders and tracking"]
+    Acc --> MyRx["My prescriptions"]
+    Acc --> Notif["Notifications"]
+    Acc --> Profile["Profile"]
+  end
+  subgraph STF["Staff panel"]
+    SD["Staff dashboard"] --> SQ["Rx review queue"]
+    SD --> SO["Orders"]
+    SD --> SP["Products and stock"]
+    SD --> SI["Inquiries"]
+    SD --> SA["Articles"]
+  end
+  subgraph ADM["Admin panel"]
+    AD["Admin dashboard"] --> AS["Staff accounts"]
+    AD --> AR["Reports"]
+    AD --> AC["Categories"]
+    AD --> AT["Testimonials"]
+    AD --> AL["Audit log"]
+  end
+  Login -->|customer| Acc
+  Login -->|staff| SD
+  Login -->|admin| AD
+</pre></div>
+      <figcaption><b>Figure 2.</b> Login sends each role to a different area. Public pages stay open to guests.</figcaption>
+    </figure>
+  </div>
+
+  <div class="sub">
+    <h3>Use case diagram</h3>
+    <figure>
+      <div class="draw"><pre class="mermaid">
+flowchart LR
+  G(("Guest"))
+  C(("Customer"))
+  S(("Staff"))
+  A(("Admin"))
+  subgraph SYS["MediQuick system"]
+    U1(["Browse and search medicines"])
+    U2(["Register / log in"])
+    U3(["Send inquiry"])
+    U4(["Place order and pay"])
+    U5(["Upload prescription"])
+    U6(["Track order"])
+    U7(["Verify prescription"])
+    U8(["Update order status"])
+    U9(["Manage products and stock"])
+    U10(["Reply to inquiry"])
+    U11(["Manage staff accounts"])
+    U12(["View reports and audit log"])
+  end
+  G --- U1
+  G --- U2
+  G --- U3
+  C --- U1
+  C --- U3
+  C --- U4
+  C --- U5
+  C --- U6
+  S --- U7
+  S --- U8
+  S --- U9
+  S --- U10
+  A --- U7
+  A --- U9
+  A --- U11
+  A --- U12
+  U4 -.->|"includes, if Rx item"| U5
+</pre></div>
+      <figcaption><b>Figure 3.</b> Placing an order includes a prescription upload whenever the cart holds an Rx-only product.</figcaption>
+    </figure>
+  </div>
+
+  <div class="sub">
+    <h3>Context diagram (DFD level 0)</h3>
+    <figure>
+      <div class="draw"><pre class="mermaid">
+flowchart LR
+  C["Customer"] -->|"account details, orders, prescriptions, inquiries"| P(("0 · MediQuick system"))
+  P -->|"order status, notifications, replies"| C
+  S["Staff"] -->|"Rx decisions, stock updates, replies"| P
+  P -->|"review queue, orders, low-stock list"| S
+  A["Admin"] -->|"staff accounts, categories"| P
+  P -->|"reports, audit log"| A
+  P -->|"payment request"| G["PayHere"]
+  G -->|"payment result"| P
+</pre></div>
+      <figcaption><b>Figure 4.</b> Four outside parties exchange data with the system. PayHere is the only non-human one.</figcaption>
+    </figure>
+  </div>
+
+  <div class="sub">
+    <h3>Order lifecycle</h3>
+    <figure>
+      <div class="draw"><pre class="mermaid">
+stateDiagram-v2
+  direction LR
+  [*] --> pending_verification : cart has Rx item
+  [*] --> awaiting_payment : OTC only, card
+  [*] --> confirmed : OTC only, COD
+  pending_verification --> awaiting_payment : Rx approved, card
+  pending_verification --> confirmed : Rx approved, COD
+  pending_verification --> cancelled : Rx rejected
+  awaiting_payment --> confirmed : PayHere callback OK
+  awaiting_payment --> cancelled : payment failed or customer cancels
+  confirmed --> packed : staff packs, stock deducted
+  confirmed --> cancelled : customer cancels
+  packed --> dispatched
+  dispatched --> delivered
+  delivered --> [*]
+  cancelled --> [*]
+</pre></div>
+      <figcaption><b>Figure 5.</b> Values of <code>orders.status</code>. Stock is only deducted after an order is confirmed, so abandoned carts never lock up stock.</figcaption>
+    </figure>
+  </div>
+
+  <div class="sub">
+    <h3>Prescription order sequence</h3>
+    <figure>
+      <div class="draw"><pre class="mermaid">
+sequenceDiagram
+  autonumber
+  actor C as Customer
+  participant P as PHP (XAMPP)
+  participant D as MySQL
+  actor S as Staff
+  participant G as PayHere sandbox
+  C->>P: Upload prescription file and SLMC number
+  P->>P: Check type and size, give random filename
+  P->>D: INSERT prescriptions (pending)
+  C->>P: Checkout with Rx item
+  P->>D: INSERT order (pending_verification)
+  S->>P: Open review queue and approve
+  P->>D: Prescription approved, order awaiting_payment
+  P->>D: INSERT notification for customer
+  C->>P: Click Pay now
+  P->>G: Redirect with merchant_id, order_no, amount, hash
+  G-->>P: notify_url POST with status and md5sig
+  P->>P: Recompute md5sig with merchant secret
+  P->>D: Transaction - payment row, order confirmed
+  G-->>C: Return to confirmation page
+</pre></div>
+      <figcaption><b>Figure 6.</b> The flow behind FR-10, FR-13, FR-14 and FR-15. Step 12 is the security check: without a matching signature the order stays unpaid.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 6 -->
+<section id="db">
+  <h2><span class="num">6</span>Database plan</h2>
+  <p>Twelve InnoDB tables in <code>mediquick_db</code>, normalised to 3NF. The ready-to-import script is at <code>database/schema.sql</code> in the project folder.</p>
+
+  <figure>
+    <div class="draw"><pre class="mermaid">
+erDiagram
+  USERS ||--o{ ORDERS : places
+  USERS ||--o{ PRESCRIPTIONS : uploads
+  USERS ||--o{ NOTIFICATIONS : receives
+  USERS |o--o{ INQUIRIES : sends
+  USERS ||--o{ ARTICLES : writes
+  USERS ||--o{ TESTIMONIALS : gives
+  USERS |o--o{ AUDIT_LOGS : "is logged in"
+  CATEGORIES ||--o{ PRODUCTS : groups
+  ORDERS ||--|{ ORDER_ITEMS : contains
+  PRODUCTS ||--o{ ORDER_ITEMS : "sold as"
+  PRESCRIPTIONS |o--o{ ORDERS : authorises
+  ORDERS ||--o{ PAYMENTS : "paid by"
+  USERS {
+    int id PK
+    enum role
+    varchar email UK
+    varchar password_hash
+  }
+  PRODUCTS {
+    int id PK
+    int category_id FK
+    decimal price
+    int stock_qty
+    tinyint requires_prescription
+  }
+  PRESCRIPTIONS {
+    int id PK
+    int customer_id FK
+    enum status
+    int reviewed_by FK
+  }
+  ORDERS {
+    int id PK
+    varchar order_no UK
+    int customer_id FK
+    int prescription_id FK
+    enum status
+    decimal total
+  }
+  ORDER_ITEMS {
+    int id PK
+    int order_id FK
+    int product_id FK
+    int quantity
+    decimal unit_price
+  }
+  PAYMENTS {
+    int id PK
+    int order_id FK
+    varchar gateway_ref
+    enum status
+  }
+</pre></div>
+    <figcaption><b>Figure 7.</b> Entity relationship diagram. <code>users</code> sits at the centre because all three roles share it. Staff links (<code>reviewed_by</code>, <code>handled_by</code>, <code>replied_by</code>) point back into the same table.</figcaption>
+  </figure>
+
+  <div class="dbgrid" id="dbgrid"></div>
+
+  <div class="sub">
+    <h3>Design decisions</h3>
+    <ul class="plain">
+      <li><b>One users table with a role column.</b> Customers, staff and admins log in the same way. Separate tables would repeat the login code three times.</li>
+      <li><b><code>order_items.unit_price</code> is copied at order time.</b> Changing a product's price later doesn't change old invoices.</li>
+      <li><b>Money is <code>DECIMAL(10,2)</code>, never FLOAT,</b> so LKR totals never pick up rounding errors.</li>
+      <li><b><code>CHECK</code> constraints</b> (price ≥ 0, stock ≥ 0, quantity &gt; 0, rating 1–5) back up the PHP validation at the database level.</li>
+      <li><b>Foreign keys with <code>ON DELETE</code> rules.</b> Deleting an order removes its items. Deleting a user keeps their audit rows (set to NULL). Customers are suspended rather than deleted, so order history survives.</li>
+      <li><b>Indexes</b> on product name, generic name, <code>orders.status</code> and <code>prescriptions.status</code>: the columns used by search and the staff queues.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 7 -->
+<section id="schedule">
+  <h2><span class="num">7</span>Schedule &amp; report budget</h2>
+
+  <div class="sub">
+    <h3>Build plan (Gantt)</h3>
+    <p class="note">Example dates starting 14 Sep 2026. Shift them to fit the deadline posted on Moodle.</p>
+    <figure>
+      <div class="draw"><pre class="mermaid">
+gantt
+  dateFormat YYYY-MM-DD
+  axisFormat %d %b
+  section Task 01 Design
+  Compare similar sites        :t1, 2026-09-14, 4d
+  Wireframes and site map      :t2, after t1, 5d
+  section Task 02 Build
+  DB, auth and layout          :b1, after t2, 5d
+  Catalogue, search, filters   :b2, after b1, 4d
+  Cart, checkout, PayHere      :b3, after b2, 6d
+  Prescription upload, review  :b4, after b2, 5d
+  Staff panel                  :b5, after b3, 5d
+  Admin panel and charts       :b6, after b5, 5d
+  section Task 03 Test
+  Test plan and cases          :c1, after b4, 4d
+  Run tests and fix bugs       :c2, after b6, 4d
+  User acceptance and feedback :c3, after c2, 4d
+  section Report
+  Write and reference report   :r1, after c1, 20d
+  Final review and PDF         :milestone, m1, after c3, 0d
+</pre></div>
+      <figcaption><b>Figure 8.</b> About 7 weeks. Prescription review is built alongside checkout because both only need the catalogue to exist.</figcaption>
+    </figure>
+  </div>
+
+  <div class="sub">
+    <h3>Word budget</h3>
+    <p class="muted">Every task carries 20 marks. The suggested split of the 2,800 words gives more text to back-end and testing, where you have to explain things. The design task can rely on figures.</p>
+    <div class="budget" role="img" aria-label="Suggested word budget: site comparison 500, UI design and site map 450, front-end 550, back-end 700, testing 600, total 2800.">
+      <div class="brow"><span>01a Site comparison</span><div class="bar"><i style="width:71.4%"></i></div><span class="n">500</span></div>
+      <div class="brow"><span>01b UI design &amp; site map</span><div class="bar"><i style="width:64.3%"></i></div><span class="n">450</span></div>
+      <div class="brow"><span>02a Front-end</span><div class="bar"><i style="width:78.6%"></i></div><span class="n">550</span></div>
+      <div class="brow"><span>02b Back-end</span><div class="bar"><i style="width:100%"></i></div><span class="n">700</span></div>
+      <div class="brow"><span>03 Testing</span><div class="bar"><i style="width:85.7%"></i></div><span class="n">600</span></div>
+      <div class="axis"><span></span><div><span style="left:0">0</span><span style="left:50%">350</span><span style="left:100%">700</span></div><span></span></div>
+    </div>
+  </div>
+</section>
+
+<footer>MediQuick Pharmacy · CSE4206 WRIT1 planning pack · Stack: PHP 8, MySQL, Bootstrap 5, XAMPP, PayHere sandbox, Chart.js</footer>
+</main>
+</div>
+
+<script>
+const T = [
+  ["users","All three roles",[["id","INT","pk"],["role","ENUM(customer,staff,admin)"],["full_name","VARCHAR(100)"],["email","VARCHAR(150)","uk"],["phone","VARCHAR(15)"],["password_hash","VARCHAR(255)"],["address, city","VARCHAR"],["status","ENUM(active,suspended)"],["last_login_at","DATETIME"],["created_at","DATETIME"]]],
+  ["categories","Product groups",[["id","INT","pk"],["name","VARCHAR(80)","uk"],["slug","VARCHAR(80)","uk"],["description","VARCHAR(255)"]]],
+  ["products","Catalogue and stock",[["id","INT","pk"],["category_id","INT","fk"],["name, generic_name","VARCHAR(150)"],["brand","VARCHAR(100)"],["description","TEXT"],["dosage_guidelines","TEXT"],["safety_info","TEXT"],["price","DECIMAL(10,2)"],["stock_qty","INT"],["reorder_level","INT"],["requires_prescription","TINYINT(1)"],["expiry_date","DATE"],["image","VARCHAR(255)"],["is_active","TINYINT(1)"]]],
+  ["prescriptions","Uploaded Rx files",[["id","INT","pk"],["customer_id","INT","fk"],["file_path","VARCHAR(255)"],["doctor_name","VARCHAR(100)"],["doctor_reg_no","VARCHAR(20)"],["status","ENUM(pending,approved,rejected)"],["reviewed_by","INT","fk"],["review_note","VARCHAR(255)"],["reviewed_at, uploaded_at","DATETIME"]]],
+  ["orders","One per checkout",[["id","INT","pk"],["order_no","VARCHAR(20)","uk"],["customer_id","INT","fk"],["prescription_id","INT NULL","fk"],["status","ENUM(7 states)"],["payment_method","ENUM(card,cod)"],["payment_status","ENUM(unpaid,paid,failed)"],["subtotal, delivery_fee, total","DECIMAL(10,2)"],["delivery_address, city, phone","VARCHAR"],["handled_by","INT","fk"],["created_at, updated_at","DATETIME"]]],
+  ["order_items","Lines in an order",[["id","INT","pk"],["order_id","INT","fk"],["product_id","INT","fk"],["quantity","INT"],["unit_price","DECIMAL(10,2)"]]],
+  ["payments","Gateway attempts",[["id","INT","pk"],["order_id","INT","fk"],["gateway","ENUM(payhere,cod)"],["gateway_ref","VARCHAR(100)"],["amount","DECIMAL(10,2)"],["status","ENUM(success,failed,pending)"],["created_at","DATETIME"]]],
+  ["inquiries","Contact form and replies",[["id","INT","pk"],["customer_id","INT NULL","fk"],["name, email","VARCHAR"],["subject","VARCHAR(150)"],["message","TEXT"],["status","ENUM(open,answered,closed)"],["reply","TEXT"],["replied_by","INT","fk"],["replied_at, created_at","DATETIME"]]],
+  ["notifications","In-app alerts",[["id","INT","pk"],["user_id","INT","fk"],["title","VARCHAR(120)"],["message","VARCHAR(255)"],["link","VARCHAR(255)"],["is_read","TINYINT(1)"],["created_at","DATETIME"]]],
+  ["articles","Health hub posts",[["id","INT","pk"],["author_id","INT","fk"],["title","VARCHAR(150)"],["slug","VARCHAR(150)","uk"],["body","TEXT"],["image","VARCHAR(255)"],["published_at","DATETIME NULL"]]],
+  ["testimonials","Shown on home page",[["id","INT","pk"],["customer_id","INT","fk"],["rating","TINYINT 1–5"],["message","VARCHAR(500)"],["is_approved","TINYINT(1)"],["created_at","DATETIME"]]],
+  ["audit_logs","Who did what",[["id","BIGINT","pk"],["user_id","INT NULL","fk"],["action","VARCHAR(60)"],["entity, entity_id","VARCHAR / INT"],["ip_address","VARCHAR(45)"],["created_at","DATETIME"]]]
+];
+const esc = s => s.replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+document.getElementById("dbgrid").innerHTML = T.map(([name, role, cols]) =>
+  `<article class="dbt"><header><b>${name}</b><span>${role}</span></header><table><tbody>${
+    cols.map(([c, t, k]) => `<tr><td>${esc(c)}${k ? `<span class="key ${k}">${k.toUpperCase()}</span>` : ""}</td><td>${esc(t)}</td></tr>`).join("")
+  }</tbody></table></article>`).join("");
+</script>
+
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";
+  const dark = matchMedia("(prefers-color-scheme: dark)").matches;
+  mermaid.initialize({ startOnLoad: true, theme: dark ? "dark" : "default" });
+</script>
+</body>
+</html>

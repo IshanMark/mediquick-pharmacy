@@ -1,0 +1,10 @@
+# Uploaded prescription files — never commit real patient documents
+mediquick/uploads/rx/*
+!mediquick/uploads/rx/.htaccess
+
+# Runtime error log
+mediquick/error.log
+
+# Local editor/OS junk
+.DS_Store
+Thumbs.db

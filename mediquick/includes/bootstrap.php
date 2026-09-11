@@ -1,0 +1,7 @@
+<?php
+/** One include that wires up config, DB, auth, CSRF and helpers, in the right order. */
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/auth.php';
+require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/csrf.php';
+require_once __DIR__ . '/functions.php';

@@ -1,0 +1,270 @@
+/* MediQuick Pharmacy — shared styles for customer, staff and admin areas.
+   Palette and component language matched to the approved UI mockup:
+   brand green (emerald), navy dark surfaces, slate neutrals, rounded-2xl cards. */
+
+:root {
+  --brand-50:  #F0FDF4;
+  --brand-100: #DCFCE7;
+  --brand-200: #BBF7D0;
+  --brand-500: #00B074;
+  --brand-600: #059669;
+  --brand-700: #047857;
+  --brand-900: #064E3B;
+  --navy-800: #0A192F;
+  --navy-900: #0F172A;
+  --slate-50:  #F8FAFC;
+  --slate-100: #F1F5F9;
+  --slate-200: #E2E8F0;
+  --slate-400: #94A3B8;
+  --slate-500: #64748B;
+  --slate-800: #1E293B;
+  --amber-100: #FEF3C7;
+  --amber-700: #B45309;
+
+  /* Semantic aliases used across templates */
+  --brand: var(--brand-700);
+  --brand-light: var(--brand-500);
+  --brand-soft: var(--brand-100);
+  --navy: var(--navy-900);
+  --ink: var(--slate-800);
+  --muted: var(--slate-500);
+  --rule: var(--slate-200);
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--slate-50);
+}
+
+a { color: var(--brand-700); }
+.text-brand { color: var(--brand-700); }
+.bg-brand { background: var(--brand-700); }
+
+.btn-brand {
+  background: var(--brand-500);
+  color: #fff;
+  border: none;
+  box-shadow: 0 8px 20px -6px rgba(0, 176, 116, .45);
+}
+.btn-brand:hover { background: var(--brand-600); color: #fff; }
+
+/* Rounder, softer controls throughout — matches the mockup's rounded-xl language */
+.btn { border-radius: .65rem; font-weight: 600; }
+.form-control, .form-select { border-radius: .6rem; border-color: var(--rule); }
+.form-control:focus, .form-select:focus {
+  border-color: var(--brand-500);
+  box-shadow: 0 0 0 .2rem rgba(0, 176, 116, .15);
+}
+.badge { border-radius: 999px; font-weight: 600; padding: .35em .7em; }
+.alert { border-radius: .75rem; }
+
+/* --- Top announcement strip --- */
+.announce-bar {
+  background: var(--navy-900);
+  color: #cbd5e1;
+  font-size: .75rem;
+  padding: .45rem 0;
+}
+.announce-bar a { color: #cbd5e1; text-decoration: none; }
+.announce-bar a:hover { color: var(--brand-500); }
+
+/* --- Public/customer navbar (white, elevated) --- */
+.site-navbar {
+  background: #fff;
+  border-bottom: 1px solid var(--rule);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+}
+.site-navbar .nav-link {
+  color: var(--slate-500);
+  font-weight: 500;
+  border-radius: .5rem;
+}
+.site-navbar .nav-link:hover { color: var(--brand-700); background: var(--slate-100); }
+
+.brand-mark {
+  width: 2.4rem; height: 2.4rem;
+  border-radius: .8rem;
+  background: var(--brand-500);
+  color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.15rem;
+  box-shadow: 0 6px 16px -4px rgba(0, 176, 116, .4);
+  flex-shrink: 0;
+}
+.brand-mark-sm { width: 1.9rem; height: 1.9rem; font-size: .95rem; border-radius: .55rem; }
+.brand-name { font-weight: 800; color: var(--navy-900); line-height: 1.1; font-size: 1.05rem; }
+.brand-sub { font-size: .6rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brand-600); }
+
+.badge-rx-inline {
+  background: var(--amber-100); color: var(--amber-700);
+  font-size: .6rem; font-weight: 700; border-radius: 999px; padding: .1em .5em; margin-left: .25em;
+}
+
+.icon-btn {
+  width: 2.25rem; height: 2.25rem;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 999px;
+  color: var(--slate-500);
+  font-size: 1.05rem;
+}
+.icon-btn:hover { background: var(--slate-100); color: var(--brand-700); }
+.cart-badge {
+  position: absolute; top: -.25rem; right: -.35rem;
+  background: #ef4444; color: #fff;
+  font-size: .6rem; font-weight: 700;
+  width: 1.1rem; height: 1.1rem; border-radius: 999px;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid #fff;
+}
+
+/* --- Footer (navy, 4-column) --- */
+.site-footer {
+  background: var(--navy-900);
+  color: #94A3B8;
+  margin-top: 3rem;
+  font-size: .82rem;
+}
+.site-footer p { color: #94A3B8; }
+.border-bottom-slate { border-bottom: 1px solid #1E293B; }
+.footer-heading { color: #fff; font-weight: 700; font-size: .85rem; margin-bottom: .75rem; }
+.footer-links { list-style: none; padding: 0; margin: 0; display: grid; gap: .5rem; }
+.footer-links a { color: #94A3B8; text-decoration: none; }
+.footer-links a:hover { color: var(--brand-500); }
+
+/* --- Hero --- */
+.hero {
+  background: linear-gradient(135deg, var(--navy-900) 0%, var(--brand-900) 100%);
+  background-image:
+    radial-gradient(rgba(52, 211, 153, .12) 1px, transparent 1px),
+    linear-gradient(135deg, var(--navy-900) 0%, var(--brand-900) 100%);
+  background-size: 16px 16px, cover;
+  color: #fff;
+  padding: 3.5rem 0;
+}
+.hero h1 { font-weight: 800; }
+.hero .eyebrow-pill {
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: rgba(16, 185, 129, .18); color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, .3);
+  font-size: .72rem; font-weight: 700; border-radius: 999px; padding: .35rem .8rem;
+}
+
+/* --- Category cards --- */
+.category-card {
+  border: 1px solid var(--rule);
+  border-radius: 1rem;
+  transition: box-shadow .15s ease, border-color .15s ease, transform .15s ease;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+}
+.category-card:hover {
+  border-color: var(--brand-500);
+  box-shadow: 0 10px 24px -8px rgba(4, 120, 87, .18);
+  transform: translateY(-2px);
+}
+.category-icon {
+  width: 3.25rem; height: 3.25rem; margin: 0 auto .6rem;
+  border-radius: .9rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+  background: var(--brand-50); color: var(--brand-500);
+}
+
+/* --- Product cards --- */
+.product-card {
+  border: 1px solid var(--rule);
+  border-radius: 1rem;
+  height: 100%;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+  transition: box-shadow .15s ease, border-color .15s ease;
+}
+.product-card:hover { box-shadow: 0 10px 22px -8px rgba(15, 23, 42, .12); border-color: var(--brand-200); }
+.product-card .product-thumb {
+  aspect-ratio: 4 / 3;
+  background: var(--brand-50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  color: var(--brand-500);
+}
+.badge-rx {
+  background: var(--amber-100);
+  color: var(--amber-700);
+  font-weight: 700;
+}
+
+/* --- KPI / content tiles (dashboards, panels) --- */
+.kpi-tile {
+  border: 1px solid var(--rule);
+  border-radius: 1rem;
+  background: #fff;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .04);
+}
+.kpi-tile .kpi-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--navy-900);
+}
+.kpi-tile .kpi-label {
+  font-size: .75rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+/* --- Staff/admin app shell --- */
+.app-shell { display: flex; min-height: 100vh; }
+.app-sidebar {
+  width: 235px;
+  flex-shrink: 0;
+  background: var(--navy-900);
+  color: #cbd5e1;
+  display: flex;
+  flex-direction: column;
+}
+.app-sidebar .brand {
+  padding: 1.1rem 1.25rem;
+  font-weight: 800;
+  font-size: 1rem;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  display: flex; align-items: center; gap: .6rem;
+}
+.app-sidebar .nav-link {
+  color: #94A3B8;
+  padding: .6rem 1.25rem;
+  border-radius: 0;
+  font-size: .9rem;
+  font-weight: 500;
+}
+.app-sidebar .nav-link.active {
+  background: rgba(0, 176, 116, .16);
+  color: #fff;
+  border-left: 3px solid var(--brand-500);
+  font-weight: 600;
+}
+.app-sidebar .nav-link:hover { color: #fff; }
+.app-main { flex: 1; min-width: 0; background: var(--slate-50); }
+.app-topbar {
+  background: #fff;
+  border-bottom: 1px solid var(--rule);
+  padding: .85rem 1.5rem;
+}
+.app-content { padding: 1.5rem; }
+
+@media (max-width: 900px) {
+  .app-shell { flex-direction: column; }
+  .app-sidebar { width: 100%; }
+}
+
+.table-sm-tight td, .table-sm-tight th { padding: .5rem .75rem; }
+
+/* Custom scrollbar, matched to the mockup */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--slate-100); }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--slate-400); }
